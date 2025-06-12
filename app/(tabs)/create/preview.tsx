@@ -74,19 +74,13 @@ export default function PreviewScreen() {
   const generateLetter = async () => {
     setIsGenerating(true);
     try {
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/generate-letter`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${process.env.EXPO_PUBLIC_OPENAI_API_KEY}`,
         },
         body: JSON.stringify({
-          model: 'gpt-3.5-turbo',
-          messages: [
-            { role: 'system', content: 'Vous rédigez des courriers formels en français.' },
-            { role: 'user', content: generatePrompt() },
-          ],
-          max_tokens: 500,
+          prompt: generatePrompt(),
         }),
       });
 
@@ -95,7 +89,7 @@ export default function PreviewScreen() {
       }
 
       const data = await response.json();
-      setGeneratedLetter(data.choices[0].message.content.trim());
+      setGeneratedLetter(data.content.trim());
     } catch (error) {
       console.error('Error generating letter:', error);
       Alert.alert('Erreur', "La génération du courrier a échoué.");
