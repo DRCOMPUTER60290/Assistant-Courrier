@@ -5,6 +5,7 @@ import { Header } from '@/components/ui/Header';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { ArrowLeft, Download, Share2, Copy, Mail, Sparkles } from 'lucide-react-native';
+import { useProfile } from '@/contexts/ProfileContext';
 
 import * as Print from 'expo-print';
 import * as FileSystem from 'expo-file-system';
