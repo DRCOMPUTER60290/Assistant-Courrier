@@ -13,9 +13,6 @@ import * as Sharing from 'expo-sharing';
 import * as Clipboard from 'expo-clipboard';
 import * as MailComposer from 'expo-mail-composer';
 
-import { useProfile } from '@/contexts/ProfileContext';
-
-
 interface RecipientData {
   service: string;
   firstName: string;
