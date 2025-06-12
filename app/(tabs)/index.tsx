@@ -13,7 +13,7 @@ const quickActions = [
     description: 'Créer un courrier personnalisé',
     icon: Plus,
     color: '#22c55e',
-    action: () => router.push('/(tabs)/create'),
+  action: () => router.push('/create'),
   },
   {
     id: 'recent',
@@ -109,7 +109,7 @@ export default function HomeScreen() {
           </Text>
           <Button
             title="Créer un courrier"
-            onPress={() => router.push('/(tabs)/create')}
+            onPress={() => router.push('/create')}
             size="large"
           />
         </Card>
