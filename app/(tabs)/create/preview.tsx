@@ -5,6 +5,7 @@ import { Header } from '@/components/ui/Header';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { ArrowLeft, Download, Share2, Copy, Mail, Sparkles } from 'lucide-react-native';
+import { useProfile } from '@/contexts/ProfileContext';
 
 interface RecipientData {
   service: string;
@@ -35,6 +36,7 @@ export default function PreviewScreen() {
   const [details, setDetails] = useState<DetailsData | null>(null);
   const [generatedLetter, setGeneratedLetter] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const { profile } = useProfile();
 
   useEffect(() => {
     if (recipientData) {
@@ -62,40 +64,35 @@ export default function PreviewScreen() {
 
   const generateLetter = async () => {
     setIsGenerating(true);
-    
-    // Simulation de génération de lettre (remplacer par appel API ChatGPT)
-    setTimeout(() => {
-      const mockLetter = generateMockLetter();
-      setGeneratedLetter(mockLetter);
+    try {
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.EXPO_PUBLIC_OPENAI_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: 'gpt-3.5-turbo',
+          messages: [
+            { role: 'system', content: 'Vous rédigez des courriers formels en français.' },
+            { role: 'user', content: generatePrompt() },
+          ],
+          max_tokens: 500,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch');
+      }
+
+      const data = await response.json();
+      setGeneratedLetter(data.choices[0].message.content.trim());
+    } catch (error) {
+      console.error('Error generating letter:', error);
+      Alert.alert('Erreur', "La génération du courrier a échoué.");
+    } finally {
       setIsGenerating(false);
-    }, 2000);
-  };
-
-  const generateMockLetter = (): string => {
-    const today = new Date().toLocaleDateString('fr-FR');
-    
-    return `Jean Dupont
-123 rue de la République
-75001 Paris
-
-${recipient?.service}
-À l'attention de ${recipient?.firstName} ${recipient?.lastName}
-${recipient?.address}
-${recipient?.postalCode} ${recipient?.city}
-
-Paris, le ${today}
-
-Objet : ${getLetterSubject()}
-
-${getLetterSalutation()},
-
-${getLetterBody()}
-
-${getLetterClosing()}
-
-Cordialement,
-
-Jean Dupont`;
+    }
   };
 
   const getLetterSubject = (): string => {
@@ -164,6 +161,10 @@ ${details?.additionalInfo || ''}`;
       default:
         return 'Je vous prie d\'agréer mes salutations distinguées.';
     }
+  };
+
+  const generatePrompt = (): string => {
+    return `Expéditeur :\n${profile.firstName} ${profile.lastName}\n${profile.address}\n${profile.postalCode} ${profile.city}\n\nDestinataire :\n${recipient?.service}\n${recipient?.firstName} ${recipient?.lastName}\n${recipient?.address}\n${recipient?.postalCode} ${recipient?.city}\n\nObjet : ${getLetterSubject()}\n\nDétails : ${details?.reason ?? ''}\n${details?.additionalInfo ?? ''}\nNuméro : ${details?.contractNumber ?? ''}\nDate : ${details?.subscriptionDate ?? ''}\nMontant : ${details?.amount ?? ''}\n\nRédige ce courrier de manière formelle en français avec la salutation "${getLetterSalutation()}" et une conclusion appropriée.`;
   };
 
   const handleBack = () => {
