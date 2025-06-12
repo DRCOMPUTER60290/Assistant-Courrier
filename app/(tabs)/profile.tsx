@@ -1,41 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
 import { Header } from '@/components/ui/Header';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { User, Mail, MapPin, Phone, Building } from 'lucide-react-native';
-
-interface ProfileData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  address: string;
-  postalCode: string;
-  city: string;
-  company?: string;
-  position?: string;
-}
+import { useProfile, ProfileData } from '@/contexts/ProfileContext';
 
 export default function ProfileScreen() {
   const [isEditing, setIsEditing] = useState(false);
-  const [profileData, setProfileData] = useState<ProfileData>({
-    firstName: 'Jean',
-    lastName: 'Dupont',
-    email: 'jean.dupont@email.com',
-    phone: '06 12 34 56 78',
-    address: '123 rue de la République',
-    postalCode: '75001',
-    city: 'Paris',
-    company: 'Entreprise SARL',
-    position: 'Développeur',
-  });
+  const { profile: profileData, setProfile } = useProfile();
 
   const [editData, setEditData] = useState<ProfileData>(profileData);
 
+  useEffect(() => {
+    if (isEditing) {
+      setEditData(profileData);
+    }
+  }, [isEditing, profileData]);
+
   const handleSave = () => {
-    setProfileData(editData);
+    setProfile(editData);
     setIsEditing(false);
     Alert.alert('Succès', 'Votre profil a été mis à jour avec succès.');
   };
