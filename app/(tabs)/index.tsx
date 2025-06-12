@@ -6,6 +6,7 @@ import { Header } from '@/components/ui/Header';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { FileText, Plus, Clock, TrendingUp, Star } from 'lucide-react-native';
+import { useHistory } from '@/contexts/HistoryContext';
 
 const quickActions = [
   {
@@ -26,14 +27,28 @@ const quickActions = [
   },
 ];
 
-const stats = [
-  { label: 'Courriers créés', value: '12', icon: FileText },
-  { label: 'Taux de succès', value: '98%', icon: TrendingUp },
-  { label: 'Note moyenne', value: '4.8', icon: Star },
-];
 
 export default function HomeScreen() {
+
   const { profile } = useProfile();
+
+  const { history } = useHistory();
+  const completed = history.filter(h => h.status === 'completed');
+  const successRate = history.length
+    ? `${Math.round((completed.length / history.length) * 100)}%`
+    : '0%';
+  const averageRating = completed.length
+    ? (
+        completed.reduce((sum, item) => sum + (item.rating || 0), 0) /
+        completed.length
+      ).toFixed(1)
+    : 'N/A';
+  const stats = [
+    { label: 'Courriers créés', value: String(completed.length), icon: FileText },
+    { label: 'Taux de succès', value: successRate, icon: TrendingUp },
+    { label: 'Note moyenne', value: averageRating, icon: Star },
+  ];
+
   return (
     <View style={styles.container}>
       <Header 

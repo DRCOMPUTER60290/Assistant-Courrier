@@ -1,60 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Header } from '@/components/ui/Header';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { FileText, Download, Share2, Clock, Search } from 'lucide-react-native';
 import { Input } from '@/components/ui/Input';
+import { useHistory, HistoryItem } from '@/contexts/HistoryContext';
 
-interface HistoryItem {
-  id: string;
-  type: string;
-  title: string;
-  date: string;
-  recipient: string;
-  status: 'completed' | 'draft';
-}
-
-const historyData: HistoryItem[] = [
-  {
-    id: '1',
-    type: 'Résiliation',
-    title: 'Résiliation abonnement téléphonique',
-    date: '2024-01-15',
-    recipient: 'Orange',
-    status: 'completed',
-  },
-  {
-    id: '2',
-    type: 'Réclamation',
-    title: 'Réclamation service client',
-    date: '2024-01-10',
-    recipient: 'SNCF Connect',
-    status: 'completed',
-  },
-  {
-    id: '3',
-    type: 'Candidature',
-    title: 'Candidature développeur web',
-    date: '2024-01-08',
-    recipient: 'TechCorp SARL',
-    status: 'draft',
-  },
-];
 
 export default function HistoryScreen() {
+  const { history } = useHistory();
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredHistory, setFilteredHistory] = useState(historyData);
+  const [filteredHistory, setFilteredHistory] = useState<HistoryItem[]>(history);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    const filtered = historyData.filter(item =>
-      item.title.toLowerCase().includes(query.toLowerCase()) ||
-      item.type.toLowerCase().includes(query.toLowerCase()) ||
-      item.recipient.toLowerCase().includes(query.toLowerCase())
+  };
+
+  useEffect(() => {
+    const filtered = history.filter(item =>
+      item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.recipient.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredHistory(filtered);
-  };
+  }, [searchQuery, history]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
