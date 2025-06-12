@@ -5,7 +5,15 @@ import { Header } from '@/components/ui/Header';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { ArrowLeft, Download, Share2, Copy, Mail, Sparkles } from 'lucide-react-native';
+
+import * as Print from 'expo-print';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
+import * as Clipboard from 'expo-clipboard';
+import * as MailComposer from 'expo-mail-composer';
+
 import { useProfile } from '@/contexts/ProfileContext';
+
 
 interface RecipientData {
   service: string;
@@ -171,20 +179,52 @@ ${details?.additionalInfo || ''}`;
     router.back();
   };
 
-  const handleDownload = () => {
-    Alert.alert('Téléchargement', 'Fonctionnalité de téléchargement PDF à implémenter');
+  const generatePdf = async (): Promise<string> => {
+    const html = `\n      <html>\n        <head><meta charset="utf-8" /></head>\n        <body style="font-family:sans-serif; white-space:pre-wrap;">${generatedLetter.replace(/\n/g, '<br/>')}</body>\n      </html>`;
+    const { uri } = await Print.printToFileAsync({ html });
+    const pdfPath = FileSystem.documentDirectory + 'courrier.pdf';
+    await FileSystem.moveAsync({ from: uri, to: pdfPath });
+    return pdfPath;
   };
 
-  const handleShare = () => {
-    Alert.alert('Partage', 'Fonctionnalité de partage à implémenter');
+  const handleDownload = async () => {
+    try {
+      const path = await generatePdf();
+      Alert.alert('Téléchargement', `Fichier enregistré: ${path}`);
+    } catch (error) {
+      console.error('Download error', error);
+      Alert.alert('Erreur', "Impossible de créer le PDF");
+    }
+  };
+
+  const handleShare = async () => {
+    try {
+      const path = await generatePdf();
+      await Sharing.shareAsync(path);
+    } catch (error) {
+      console.error('Share error', error);
+      Alert.alert('Erreur', "Impossible de partager le fichier");
+    }
   };
 
   const handleCopy = () => {
+    Clipboard.setStringAsync(generatedLetter);
     Alert.alert('Copié', 'Le texte a été copié dans le presse-papiers');
   };
 
-  const handleSendEmail = () => {
-    Alert.alert('Email', 'Fonctionnalité d\'envoi par email à implémenter');
+  const handleSendEmail = async () => {
+    try {
+      const path = await generatePdf();
+      await MailComposer.composeAsync({
+        recipients: recipient?.email ? [recipient.email] : [],
+        subject: getLetterSubject(),
+        body: 'Veuillez trouver ci-joint mon courrier.',
+        attachments: [path],
+      });
+    } catch (error) {
+      console.error('Email error', error);
+      Alert.alert('Erreur', "Impossible d'envoyer l'email");
+    }
   };
 
   const handleSaveAndFinish = () => {
