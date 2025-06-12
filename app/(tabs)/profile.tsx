@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert, Image, Pressable } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 import { Header } from '@/components/ui/Header';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -32,6 +33,13 @@ export default function ProfileScreen() {
 
   const updateField = (field: keyof ProfileData, value: string) => {
     setEditData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync();
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      setProfile({ ...profileData, photoUri: result.assets[0].uri });
+    }
   };
 
   const ProfileField = ({ icon, label, value, field }: {
@@ -69,9 +77,13 @@ export default function ProfileScreen() {
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <Card style={styles.avatarCard}>
           <View style={styles.avatarContainer}>
-            <View style={styles.avatar}>
-              <User size={40} color="#1e3a8a" />
-            </View>
+            <Pressable style={styles.avatar} onPress={pickImage}>
+              {profileData.photoUri ? (
+                <Image source={{ uri: profileData.photoUri }} style={styles.avatarImage} />
+              ) : (
+                <User size={40} color="#1e3a8a" />
+              )}
+            </Pressable>
             <Text style={styles.userName}>
               {profileData.firstName} {profileData.lastName}
             </Text>
@@ -233,6 +245,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 12,
+  },
+  avatarImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
   },
   userName: {
     fontSize: 24,
