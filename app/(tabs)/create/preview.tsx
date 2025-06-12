@@ -183,6 +183,7 @@ ${details?.additionalInfo || ''}`;
     const html = `\n      <html>\n        <head><meta charset="utf-8" /></head>\n        <body style="font-family:sans-serif; white-space:pre-wrap;">${generatedLetter.replace(/\n/g, '<br/>')}</body>\n      </html>`;
     const { uri } = await Print.printToFileAsync({ html });
     const pdfPath = FileSystem.documentDirectory + 'courrier.pdf';
+    await FileSystem.deleteAsync(pdfPath, { idempotent: true });
     await FileSystem.moveAsync({ from: uri, to: pdfPath });
     return pdfPath;
   };
