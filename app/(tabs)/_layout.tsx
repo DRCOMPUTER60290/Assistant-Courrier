@@ -31,6 +31,7 @@ export default function TabLayout() {
           ),
         }}
       />
+      {/*
       <Tabs.Screen
         name="create"
         options={{
@@ -40,6 +41,7 @@ export default function TabLayout() {
           ),
         }}
       />
+      */}
       <Tabs.Screen
         name="history"
         options={{
