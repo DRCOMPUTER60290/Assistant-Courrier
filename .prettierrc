@@ -3,4 +3,5 @@
   "bracketSpacing": true,
   "singleQuote": true,
   "tabWidth": 2
+  ,"endOfLine": "lf"
 }
