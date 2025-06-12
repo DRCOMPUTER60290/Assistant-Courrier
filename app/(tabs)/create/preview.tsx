@@ -214,6 +214,11 @@ ${details?.additionalInfo || ''}`;
 
   const handleSendEmail = async () => {
     try {
+      const available = await MailComposer.isAvailableAsync();
+      if (!available) {
+        Alert.alert('Erreur', "Aucune application de messagerie n'est disponible");
+        return;
+      }
       const path = await generatePdf();
       await MailComposer.composeAsync({
         recipients: recipient?.email ? [recipient.email] : [],
