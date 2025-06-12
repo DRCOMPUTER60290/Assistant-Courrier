@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Platform } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Header } from '@/components/ui/Header';
 import { Card } from '@/components/ui/Card';
@@ -181,6 +181,20 @@ ${details?.additionalInfo || ''}`;
 
   const generatePdf = async (): Promise<string> => {
     const html = `\n      <html>\n        <head><meta charset="utf-8" /></head>\n        <body style="font-family:sans-serif; white-space:pre-wrap;">${generatedLetter.replace(/\n/g, '<br/>')}</body>\n      </html>`;
+
+    if (Platform.OS === 'web') {
+      if (typeof window !== 'undefined') {
+        const printWindow = window.open('', '_blank');
+        if (printWindow) {
+          printWindow.document.write(html);
+          printWindow.document.close();
+          printWindow.focus();
+          printWindow.print();
+        }
+      }
+      return '';
+    }
+
     const { uri } = await Print.printToFileAsync({ html });
     const pdfPath = FileSystem.documentDirectory + 'courrier.pdf';
     await FileSystem.moveAsync({ from: uri, to: pdfPath });
