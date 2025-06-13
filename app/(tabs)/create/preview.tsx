@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { ArrowLeft, Download, Share2, Copy, Mail, Sparkles } from 'lucide-react-native';
 import { useProfile } from '@/contexts/ProfileContext';
+import { useHistory, HistoryItem } from '@/contexts/HistoryContext';
 
 import * as Print from 'expo-print';
 import * as FileSystem from 'expo-file-system';
@@ -43,6 +44,7 @@ export default function PreviewScreen() {
   const [generatedLetter, setGeneratedLetter] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState(false);
   const { profile } = useProfile();
+  const { addHistoryItem } = useHistory();
 
   useEffect(() => {
     if (recipientData) {
@@ -308,16 +310,23 @@ ${specificDetails}
   };
 
   const handleSaveAndFinish = () => {
-    Alert.alert(
-      'Courrier sauvegardé',
-      'Votre courrier a été sauvegardé dans l\'historique.',
-      [
-        {
-          text: 'OK',
-          onPress: () => router.push('/history')
-        }
-      ]
-    );
+    const item: HistoryItem = {
+      id: Date.now().toString(),
+      type: getLetterTypeTitle(letterType || ''),
+      title: getLetterSubject(),
+      date: new Date().toISOString(),
+      recipient:
+        recipient?.service || `${recipient?.firstName || ''} ${recipient?.lastName || ''}`.trim(),
+      status: 'completed',
+    };
+    addHistoryItem(item);
+
+    Alert.alert('Courrier sauvegardé', 'Votre courrier a été sauvegardé dans l\'historique.', [
+      {
+        text: 'OK',
+        onPress: () => router.push('/history'),
+      },
+    ]);
   };
 
   const getLetterTypeTitle = (type: string) => {
