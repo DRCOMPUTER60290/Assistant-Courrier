@@ -102,7 +102,7 @@ export default function SettingsScreen() {
       subtitle: 'FAQ et guides d\'utilisation',
       icon: <HelpCircle size={20} color="#3b82f6" />,
       type: 'navigation',
-      onPress: () => console.log('Navigation vers aide'),
+      onPress: () => router.push('/settings/help'),
     },
     {
       id: 'contact',
@@ -110,7 +110,7 @@ export default function SettingsScreen() {
       subtitle: 'Support technique et questions',
       icon: <Smartphone size={20} color="#3b82f6" />,
       type: 'navigation',
-      onPress: () => console.log('Navigation vers contact'),
+      onPress: () => router.push('/settings/contact'),
     },
     {
       id: 'rate',
@@ -118,7 +118,7 @@ export default function SettingsScreen() {
       subtitle: 'Votre avis nous aide à nous améliorer',
       icon: <Star size={20} color="#3b82f6" />,
       type: 'navigation',
-      onPress: () => console.log('Navigation vers notation'),
+      onPress: () => router.push('/settings/rate'),
     },
   ];
 
