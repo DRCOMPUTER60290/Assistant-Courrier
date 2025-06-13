@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert, Image } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 import { Header } from '@/components/ui/Header';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -32,6 +33,25 @@ export default function ProfileScreen() {
 
   const updateField = (field: keyof ProfileData, value: string) => {
     setEditData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handlePickImage = async () => {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permission.granted) {
+      Alert.alert(
+        'Permission requise',
+        "L'autorisation d'accéder à la galerie est nécessaire."
+      );
+      return;
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 0.7,
+    });
+    if (!result.canceled) {
+      const uri = result.assets[0].uri;
+      setEditData(prev => ({ ...prev, photoUri: uri }));
+    }
   };
 
   const ProfileField = ({ icon, label, value, field }: {
@@ -70,14 +90,27 @@ export default function ProfileScreen() {
         <Card style={styles.avatarCard}>
           <View style={styles.avatarContainer}>
             <View style={styles.avatar}>
-              <User size={40} color="#1e3a8a" />
+              {(isEditing ? editData.photoUri : profileData.photoUri) ? (
+                <Image
+                  source={{ uri: isEditing ? editData.photoUri : profileData.photoUri }}
+                  style={styles.avatarImage}
+                />
+              ) : (
+                <User size={40} color="#1e3a8a" />
+              )}
             </View>
+            {isEditing && (
+              <Button title="Changer la photo" onPress={handlePickImage} size="small" style={styles.photoButton} />
+            )}
             <Text style={styles.userName}>
-              {profileData.firstName} {profileData.lastName}
+              {isEditing ? editData.firstName : profileData.firstName}{' '}
+              {isEditing ? editData.lastName : profileData.lastName}
             </Text>
-            {profileData.position && profileData.company && (
+            {(isEditing ? editData.position : profileData.position) &&
+              (isEditing ? editData.company : profileData.company) && (
               <Text style={styles.userRole}>
-                {profileData.position} chez {profileData.company}
+                {isEditing ? editData.position : profileData.position} chez{' '}
+                {isEditing ? editData.company : profileData.company}
               </Text>
             )}
           </View>
@@ -232,6 +265,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f9ff',
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: 12,
+  },
+  avatarImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+  },
+  photoButton: {
     marginBottom: 12,
   },
   userName: {

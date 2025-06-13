@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { FileText, Plus, Clock, TrendingUp, Star } from 'lucide-react-native';
 import { useHistory } from '@/contexts/HistoryContext';
+import { useProfile } from '@/contexts/ProfileContext';
 
 const quickActions = [
   {
@@ -29,6 +30,7 @@ const quickActions = [
 
 export default function HomeScreen() {
   const { history } = useHistory();
+  const { profile } = useProfile();
   const completed = history.filter(h => h.status === 'completed');
   const successRate = history.length
     ? `${Math.round((completed.length / history.length) * 100)}%`
@@ -56,13 +58,19 @@ export default function HomeScreen() {
         <Card style={styles.welcomeCard}>
           <View style={styles.welcomeContent}>
             <View style={styles.welcomeText}>
-              <Text style={styles.welcomeTitle}>Bonjour Jean ! 👋</Text>
+              <Text style={styles.welcomeTitle}>
+                Bonjour {profile.firstName} ! 👋
+              </Text>
               <Text style={styles.welcomeSubtitle}>
                 Prêt à créer votre prochain courrier professionnel ?
               </Text>
             </View>
-            <Image 
-              source={{ uri: 'https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg?auto=compress&cs=tinysrgb&w=400' }}
+            <Image
+              source={{
+                uri:
+                  profile.photoUri ||
+                  'https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg?auto=compress&cs=tinysrgb&w=400',
+              }}
               style={styles.welcomeImage}
             />
           </View>
