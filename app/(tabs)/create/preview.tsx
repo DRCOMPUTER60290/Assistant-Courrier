@@ -68,45 +68,65 @@ export default function PreviewScreen() {
     }
   }, [recipient, details]);
 
-  const generateLetter = async () => {
-    setIsGenerating(true);
-    try {
-      const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/generate-letter`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          prompt: generatePrompt(),
-        }),
-      });
+ const generateLetter = async () => {
+  setIsGenerating(true);
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch');
-      }
+  const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
-      const data = await response.json();
-      setGeneratedLetter(data.content.trim());
-    } catch (error) {
-      console.error('Error generating letter:', error);
-      Alert.alert('Erreur', "La génération du courrier a échoué.");
-    } finally {
-      setIsGenerating(false);
+  if (!API_URL) {
+    console.warn("❌ Variable EXPO_PUBLIC_API_URL non définie.");
+    Alert.alert(
+      'Erreur',
+      "L'URL de l'API n'est pas définie. Vérifie ton fichier .env et redémarre Expo avec --clear."
+    );
+    setIsGenerating(false);
+    return;
+  }
+
+  console.log("🌐 Appel API vers:", `${API_URL}/api/generate-letter`);
+
+  try {
+    const response = await fetch(`${API_URL}/api/generate-letter`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt: generatePrompt(),
+      }),
+    });
+
+    if (!response.ok) {
+      const errText = await response.text(); // lire le contenu d'erreur
+      console.error('❌ Réponse non OK:', errText);
+      throw new Error(`Échec de la requête : ${response.status}`);
     }
-  };
+
+    const data = await response.json();
+    console.log("✅ Réponse API :", data);
+    setGeneratedLetter(data.content.trim());
+  } catch (error: any) {
+    console.error('❌ Erreur de génération :', error);
+    Alert.alert('Erreur', `La génération du courrier a échoué.\n${error.message}`);
+  } finally {
+    setIsGenerating(false);
+  }
+};
 
   const getLetterSubject = (): string => {
-    switch (letterType) {
-      case 'resiliation':
-        return 'Demande de résiliation de contrat';
-      case 'reclamation':
-        return 'Réclamation concernant un dysfonctionnement';
-      case 'candidature':
-        return 'Candidature pour un poste';
-      default:
-        return 'Courrier officiel';
-    }
+  const subjects: Record<string, string> = {
+    resiliation: 'Demande de résiliation de contrat',
+    reclamation: 'Réclamation concernant un service ou produit',
+    candidature: 'Candidature pour un poste',
+    contestation: 'Contestation d’une décision ou d’une amende',
+    medical: 'Demande liée à la santé ou à une assurance',
+    immobilier: 'Demande liée à un logement ou contrat immobilier',
+    automobile: 'Demande liée à un véhicule ou une assurance auto',
+    financier: 'Demande liée à un crédit, une banque ou une assurance',
   };
+  return subjects[letterType] || 'Demande administrative';
+};
+
 
   const getLetterSalutation = (): string => {
     return `${recipient?.firstName ? 'Madame, Monsieur' : 'Madame, Monsieur'}`;
@@ -163,9 +183,40 @@ ${details?.additionalInfo || ''}`;
     }
   };
 
-  const generatePrompt = (): string => {
-    return `Expéditeur :\n${profile.firstName} ${profile.lastName}\n${profile.address}\n${profile.postalCode} ${profile.city}\n\nDestinataire :\n${recipient?.service}\n${recipient?.firstName} ${recipient?.lastName}\n${recipient?.address}\n${recipient?.postalCode} ${recipient?.city}\n\nObjet : ${getLetterSubject()}\n\nDétails : ${details?.reason ?? ''}\n${details?.additionalInfo ?? ''}\nNuméro : ${details?.contractNumber ?? ''}\nDate : ${details?.subscriptionDate ?? ''}\nMontant : ${details?.amount ?? ''}\n\nRédige ce courrier de manière formelle en français avec la salutation "${getLetterSalutation()}" et une conclusion appropriée.`;
-  };
+const generatePrompt = (): string => {
+  const today = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+
+  return `Rédige une lettre administrative formelle et professionnelle en français avec les éléments suivants :
+
+📍 Lieu et date :
+${profile.city}, le ${today}
+
+👤 Expéditeur :
+${profile.firstName} ${profile.lastName}
+${profile.address}
+${profile.postalCode} ${profile.city}
+
+🏢 Destinataire :
+${recipient?.service}
+${recipient?.firstName} ${recipient?.lastName}
+${recipient?.address}
+${recipient?.postalCode} ${recipient?.city}
+
+📝 Objet : ${getLetterSubject()}
+
+💬 Contenu :
+- ${details?.reason ?? ''}
+- ${details?.additionalInfo ?? ''}
+- Numéro de contrat : ${details?.contractNumber ?? ''}
+- Date de souscription : ${details?.subscriptionDate ?? ''}
+- Montant concerné : ${details?.amount ?? ''}
+
+📌 Le ton doit être poli, clair, et adapté à une démarche administrative.
+
+📬 Termine avec une formule de politesse.`;
+};
+
+
 
   const handleBack = () => {
     router.back();
