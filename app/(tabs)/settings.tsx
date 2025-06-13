@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, Alert } from 'react-native';
+import * as WebBrowser from 'expo-web-browser';
+import * as MailComposer from 'expo-mail-composer';
+import * as Linking from 'expo-linking';
+import { router } from 'expo-router';
 import { Header } from '@/components/ui/Header';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -101,7 +105,7 @@ export default function SettingsScreen() {
       subtitle: 'FAQ et guides d\'utilisation',
       icon: <HelpCircle size={20} color="#3b82f6" />,
       type: 'navigation',
-      onPress: () => console.log('Navigation vers aide'),
+      onPress: () => router.push('/support/help'),
     },
     {
       id: 'contact',
@@ -109,7 +113,12 @@ export default function SettingsScreen() {
       subtitle: 'Support technique et questions',
       icon: <Smartphone size={20} color="#3b82f6" />,
       type: 'navigation',
-      onPress: () => console.log('Navigation vers contact'),
+      onPress: () => {
+        MailComposer.composeAsync({
+          recipients: ['support@example.com'],
+          subject: 'Assistance - Assistant Courrier',
+        });
+      },
     },
     {
       id: 'rate',
@@ -117,7 +126,7 @@ export default function SettingsScreen() {
       subtitle: 'Votre avis nous aide à nous améliorer',
       icon: <Star size={20} color="#3b82f6" />,
       type: 'navigation',
-      onPress: () => console.log('Navigation vers notation'),
+      onPress: () => Linking.openURL('https://example.com/store'),
     },
   ];
 
