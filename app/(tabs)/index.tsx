@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { useProfile } from '@/contexts/ProfileContext';
 import { router } from 'expo-router';
 import { Header } from '@/components/ui/Header';
 import { Card } from '@/components/ui/Card';
@@ -28,6 +29,9 @@ const quickActions = [
 
 
 export default function HomeScreen() {
+
+  const { profile } = useProfile();
+
   const { history } = useHistory();
   const completed = history.filter(h => h.status === 'completed');
   const successRate = history.length
@@ -61,8 +65,12 @@ export default function HomeScreen() {
                 Prêt à créer votre prochain courrier professionnel ?
               </Text>
             </View>
-            <Image 
-              source={{ uri: 'https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg?auto=compress&cs=tinysrgb&w=400' }}
+            <Image
+              source={{
+                uri:
+                  profile.photoUri ||
+                  'https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg?auto=compress&cs=tinysrgb&w=400',
+              }}
               style={styles.welcomeImage}
             />
           </View>

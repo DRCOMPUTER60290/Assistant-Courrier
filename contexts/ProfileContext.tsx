@@ -10,6 +10,7 @@ export interface ProfileData {
   city: string;
   company?: string;
   position?: string;
+  photoUri?: string;
 }
 
 const defaultProfile: ProfileData = {
@@ -22,6 +23,7 @@ const defaultProfile: ProfileData = {
   city: 'Paris',
   company: 'Entreprise SARL',
   position: 'Développeur',
+  photoUri: undefined,
 };
 
 interface ProfileContextProps {

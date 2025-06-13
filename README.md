@@ -18,6 +18,10 @@ npm run dev
 
 The `dev` script launches the Expo development server. Follow the instructions in the terminal to open the app in a simulator, the Expo Go app, or a web browser.
 
+### Additional dependencies
+
+This project uses [`expo-image-picker`](https://docs.expo.dev/versions/latest/sdk/imagepicker/) so that users can select a profile photo from their device. The library is installed automatically via `npm install`.
+
 ## Serverless API configuration
 
 The preview screen now calls a serverless function (`api/generate-letter.ts`) which hides the OpenAI API key on the server. Configure the following environment variables:
