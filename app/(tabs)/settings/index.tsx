@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, Alert } from 'react-native';
+import { router } from 'expo-router';
 import { Header } from '@/components/ui/Header';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -128,7 +129,7 @@ export default function SettingsScreen() {
       subtitle: 'Gestion des données personnelles',
       icon: <Shield size={20} color="#3b82f6" />,
       type: 'navigation',
-      onPress: () => console.log('Navigation vers confidentialité'),
+      onPress: () => router.push('/settings/privacy'),
     },
     {
       id: 'logout',
