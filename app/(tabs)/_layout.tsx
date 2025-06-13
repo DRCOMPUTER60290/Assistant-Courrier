@@ -31,17 +31,16 @@ export default function TabLayout() {
           ),
         }}
       />
-      {/*
       <Tabs.Screen
         name="create"
         options={{
           title: 'Créer',
+          tabBarLabel: 'Créer',
           tabBarIcon: ({ size, color }) => (
             <Plus size={size} color={color} />
           ),
         }}
       />
-      */}
       <Tabs.Screen
         name="history"
         options={{
