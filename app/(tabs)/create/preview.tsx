@@ -184,7 +184,26 @@ ${details?.additionalInfo || ''}`;
   };
 
 const generatePrompt = (): string => {
-  const today = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+  const today = new Date().toLocaleDateString('fr-FR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  });
+
+  let specificDetails = '';
+  switch (letterType) {
+    case 'resiliation':
+      specificDetails = `- Numéro de contrat : ${details?.contractNumber ?? ''}\n- Date de souscription : ${details?.subscriptionDate ?? ''}\n- Montant concerné : ${details?.amount ?? ''}`;
+      break;
+    case 'reclamation':
+      specificDetails = `- Numéro de dossier : ${details?.contractNumber ?? ''}\n- Date de l'incident : ${details?.subscriptionDate ?? ''}`;
+      break;
+    case 'candidature':
+      specificDetails = `- Référence de l'offre : ${details?.contractNumber ?? ''}\n- Salaire souhaité : ${details?.amount ?? ''}`;
+      break;
+    default:
+      specificDetails = '';
+  }
 
   return `Rédige une lettre administrative formelle et professionnelle en français avec les éléments suivants :
 
@@ -207,9 +226,7 @@ ${recipient?.postalCode} ${recipient?.city}
 💬 Contenu :
 - ${details?.reason ?? ''}
 - ${details?.additionalInfo ?? ''}
-- Numéro de contrat : ${details?.contractNumber ?? ''}
-- Date de souscription : ${details?.subscriptionDate ?? ''}
-- Montant concerné : ${details?.amount ?? ''}
+${specificDetails}
 
 📌 Le ton doit être poli, clair, et adapté à une démarche administrative.
 
