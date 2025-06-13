@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Platform } from 'react-native';
 import { Header } from '@/components/ui/Header';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { FileText, Download, Share2, Clock, Search } from 'lucide-react-native';
+import { FileText, Download, Share2, Clock, Search, Copy } from 'lucide-react-native';
 import { Input } from '@/components/ui/Input';
 import { useHistory, HistoryItem } from '@/contexts/HistoryContext';
+import * as Print from 'expo-print';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
+import * as Clipboard from 'expo-clipboard';
 
 
 export default function HistoryScreen() {
@@ -41,6 +45,54 @@ export default function HistoryScreen() {
 
   const getStatusLabel = (status: string) => {
     return status === 'completed' ? 'Terminé' : 'Brouillon';
+  };
+
+  const generatePdf = async (content: string): Promise<string> => {
+    const html = `\n      <html>\n        <head><meta charset="utf-8" /></head>\n        <body style="font-family:sans-serif; white-space:pre-wrap;">${content.replace(/\n/g, '<br/>')}</body>\n      </html>`;
+
+    if (Platform.OS === 'web') {
+      if (typeof window !== 'undefined') {
+        const printWindow = window.open('', '_blank');
+        if (printWindow) {
+          printWindow.document.write(html);
+          printWindow.document.close();
+          printWindow.focus();
+          printWindow.print();
+        }
+      }
+      return '';
+    }
+
+    const { uri } = await Print.printToFileAsync({ html });
+    const pdfPath = FileSystem.documentDirectory + 'courrier.pdf';
+    await FileSystem.deleteAsync(pdfPath, { idempotent: true });
+    await FileSystem.moveAsync({ from: uri, to: pdfPath });
+    return pdfPath;
+  };
+
+  const handleDownload = async (item: HistoryItem) => {
+    try {
+      const path = await generatePdf(item.content);
+      Alert.alert('Téléchargement', `Fichier enregistré: ${path}`);
+    } catch (error) {
+      console.error('Download error', error);
+      Alert.alert('Erreur', "Impossible de créer le PDF");
+    }
+  };
+
+  const handleShare = async (item: HistoryItem) => {
+    try {
+      const path = await generatePdf(item.content);
+      await Sharing.shareAsync(path);
+    } catch (error) {
+      console.error('Share error', error);
+      Alert.alert('Erreur', "Impossible de partager le fichier");
+    }
+  };
+
+  const handleCopy = (item: HistoryItem) => {
+    Clipboard.setStringAsync(item.content);
+    Alert.alert('Copié', 'Le texte a été copié dans le presse-papiers');
   };
 
   return (
@@ -104,13 +156,22 @@ export default function HistoryScreen() {
                 </View>
                 
                 <View style={styles.historyActions}>
-                  <TouchableOpacity style={styles.actionButton}>
-                    <FileText size={20} color="#3b82f6" />
+                  <TouchableOpacity
+                    style={styles.actionButton}
+                    onPress={() => handleCopy(item)}
+                  >
+                    <Copy size={20} color="#3b82f6" />
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.actionButton}>
+                  <TouchableOpacity
+                    style={styles.actionButton}
+                    onPress={() => handleDownload(item)}
+                  >
                     <Download size={20} color="#3b82f6" />
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.actionButton}>
+                  <TouchableOpacity
+                    style={styles.actionButton}
+                    onPress={() => handleShare(item)}
+                  >
                     <Share2 size={20} color="#3b82f6" />
                   </TouchableOpacity>
                 </View>

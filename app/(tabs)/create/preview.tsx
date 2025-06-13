@@ -318,6 +318,7 @@ ${specificDetails}
       recipient:
         recipient?.service || `${recipient?.firstName || ''} ${recipient?.lastName || ''}`.trim(),
       status: 'completed',
+      content: generatedLetter,
     };
     addHistoryItem(item);
 
