@@ -111,6 +111,10 @@ export default function HistoryScreen() {
     Alert.alert('Copié', 'Le texte a été copié dans le presse-papiers');
   };
 
+  const handleOpen = (item: HistoryItem) => {
+    router.push(`/history/${item.id}`);
+  };
+
   return (
     <View style={styles.container}>
       <Header 
@@ -149,7 +153,7 @@ export default function HistoryScreen() {
           <View style={styles.historyList}>
             {filteredHistory.map((item) => (
               <Card key={item.id} style={styles.historyCard}>
-                <View style={styles.historyHeader}>
+                <TouchableOpacity style={styles.historyHeader} onPress={() => handleOpen(item)}>
                   <View style={styles.historyInfo}>
                     <Text style={styles.historyTitle}>{item.title}</Text>
                     <View style={styles.historyMeta}>
@@ -163,13 +167,13 @@ export default function HistoryScreen() {
                         <Text style={styles.historyDate}>{formatDate(item.date)}</Text>
                       </View>
                       <View style={[styles.statusBadge, { backgroundColor: `${getStatusColor(item.status)}15` }]}>
-                        <Text style={[styles.statusText, { color: getStatusColor(item.status) }]}>
-                          {getStatusLabel(item.status)}
+                        <Text style={[styles.statusText, { color: getStatusColor(item.status) }]}> 
+                          {getStatusLabel(item.status)} 
                         </Text>
                       </View>
                     </View>
                   </View>
-                </View>
+                </TouchableOpacity>
                 
                 <View style={styles.historyActions}>
                   <TouchableOpacity
