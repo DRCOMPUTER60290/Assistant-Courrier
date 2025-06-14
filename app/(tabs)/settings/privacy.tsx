@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import { Header } from '@/components/ui/Header';
 import { Card } from '@/components/ui/Card';
 import { ArrowLeft } from 'lucide-react-native';
@@ -25,10 +31,40 @@ export default function PrivacyScreen() {
 
         <Card style={styles.textCard}>
           <Text style={styles.paragraph}>
-            Cette section décrit comment vos données personnelles sont collectées
-            et utilisées par l'application. Vous pouvez détailler ici votre
-            politique de confidentialité et les mesures de sécurité mises en
-            place pour protéger vos informations.
+            Nous attachons une grande importance à la protection de vos données.
+            Cette charte explique comment l'application Assistant Courrier
+            collecte, utilise et sécurise vos informations personnelles.
+          </Text>
+          <Text style={styles.paragraph}>
+            <Text style={{ fontWeight: 'bold' }}>Données collectées : </Text>
+            votre profil (nom, coordonnées etc.) ainsi que l'historique des
+            courriers sont enregistrés uniquement sur votre appareil. Les textes
+            transmis pour la génération de courriers sont envoyés de manière
+            sécurisée au service OpenAI.
+          </Text>
+          <Text style={styles.paragraph}>
+            <Text style={{ fontWeight: 'bold' }}>Utilisation : </Text>
+            ces informations servent uniquement à personnaliser vos documents et
+            à vous permettre de retrouver vos courriers. Elles ne sont jamais
+            partagées avec des tiers sans votre accord explicite.
+          </Text>
+          <Text style={styles.paragraph}>
+            <Text style={{ fontWeight: 'bold' }}>
+              Conservation et sécurité :{' '}
+            </Text>
+            toutes les données sont stockées localement via AsyncStorage et ne
+            quittent pas votre téléphone. Les communications réseau utilisent le
+            protocole HTTPS afin de garantir leur confidentialité.
+          </Text>
+          <Text style={styles.paragraph}>
+            <Text style={{ fontWeight: 'bold' }}>Vos droits : </Text>
+            vous pouvez effacer votre historique ou modifier vos informations à
+            tout moment depuis les paramètres. La suppression de l'application
+            entraîne la disparition définitive de ces données locales.
+          </Text>
+          <Text style={styles.paragraph}>
+            Pour toute question relative à la confidentialité, vous pouvez nous
+            contacter à l'adresse support@example.com.
           </Text>
         </Card>
 
