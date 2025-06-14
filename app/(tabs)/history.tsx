@@ -48,7 +48,10 @@ export default function HistoryScreen() {
     return status === 'completed' ? 'Terminé' : 'Brouillon';
   };
 
-  const generatePdf = async (content: string): Promise<string> => {
+  const generatePdf = async (content?: string): Promise<string> => {
+    if (!content) {
+      throw new Error('empty content');
+    }
     const html = `\n      <html>\n        <head><meta charset="utf-8" /></head>\n        <body style="font-family:sans-serif; white-space:pre-wrap;">${content.replace(/\n/g, '<br/>')}</body>\n      </html>`;
 
     if (Platform.OS === 'web') {
@@ -72,6 +75,10 @@ export default function HistoryScreen() {
   };
 
   const handleDownload = async (item: HistoryItem) => {
+    if (!item.content) {
+      Alert.alert('Erreur', 'Ce courrier ne contient pas de texte.');
+      return;
+    }
     try {
       const path = await generatePdf(item.content);
       Alert.alert('Téléchargement', `Fichier enregistré: ${path}`);
@@ -82,6 +89,10 @@ export default function HistoryScreen() {
   };
 
   const handleShare = async (item: HistoryItem) => {
+    if (!item.content) {
+      Alert.alert('Erreur', 'Ce courrier ne contient pas de texte.');
+      return;
+    }
     try {
       const path = await generatePdf(item.content);
       await Sharing.shareAsync(path);
@@ -92,6 +103,10 @@ export default function HistoryScreen() {
   };
 
   const handleCopy = (item: HistoryItem) => {
+    if (!item.content) {
+      Alert.alert('Erreur', 'Ce courrier ne contient pas de texte.');
+      return;
+    }
     Clipboard.setStringAsync(item.content);
     Alert.alert('Copié', 'Le texte a été copié dans le presse-papiers');
   };
