@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { FileText, Download, Share2, Clock, Search, Copy } from 'lucide-react-native';
 import { Input } from '@/components/ui/Input';
 import { useHistory, HistoryItem } from '@/contexts/HistoryContext';
+import { router } from 'expo-router';
 import * as Print from 'expo-print';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
@@ -124,7 +125,7 @@ export default function HistoryScreen() {
             {!searchQuery && (
               <Button
                 title="Créer mon premier courrier"
-                onPress={() => {/* Navigation vers création */}}
+                onPress={() => router.push('/(tabs)/create')}
                 style={styles.createButton}
               />
             )}
