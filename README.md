@@ -13,8 +13,12 @@ Install dependencies and start the development server:
 
 ```bash
 npm install
+cp .env.example .env # create your local environment file
 npm run dev
 ```
+
+Copy `.env.example` to `.env` and add your own secrets before running the app. The
+`.env` file is ignored by Git.
 
 The `dev` script launches the Expo development server. Follow the instructions in the terminal to open the app in a simulator, the Expo Go app, or a web browser.
 
