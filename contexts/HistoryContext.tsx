@@ -7,7 +7,7 @@ export interface HistoryItem {
   title: string;
   date: string;
   recipient: string;
-  content: string;
+  content?: string;
   status: 'completed' | 'draft';
   rating?: number;
 }
