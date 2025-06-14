@@ -31,41 +31,53 @@ export default function PrivacyScreen() {
 
         <Card style={styles.textCard}>
           <Text style={styles.paragraph}>
-            Nous attachons une grande importance à la protection de vos données.
-            Cette charte explique comment l'application Assistant Courrier
-            collecte, utilise et sécurise vos informations personnelles.
-          </Text>
-          <Text style={styles.paragraph}>
-            <Text style={{ fontWeight: 'bold' }}>Données collectées : </Text>
-            votre profil (nom, coordonnées etc.) ainsi que l'historique des
-            courriers sont enregistrés uniquement sur votre appareil. Les textes
-            transmis pour la génération de courriers sont envoyés de manière
-            sécurisée au service OpenAI.
-          </Text>
-          <Text style={styles.paragraph}>
-            <Text style={{ fontWeight: 'bold' }}>Utilisation : </Text>
-            ces informations servent uniquement à personnaliser vos documents et
-            à vous permettre de retrouver vos courriers. Elles ne sont jamais
-            partagées avec des tiers sans votre accord explicite.
-          </Text>
-          <Text style={styles.paragraph}>
-            <Text style={{ fontWeight: 'bold' }}>
-              Conservation et sécurité :{' '}
-            </Text>
-            toutes les données sont stockées localement via AsyncStorage et ne
-            quittent pas votre téléphone. Les communications réseau utilisent le
-            protocole HTTPS afin de garantir leur confidentialité.
-          </Text>
-          <Text style={styles.paragraph}>
-            <Text style={{ fontWeight: 'bold' }}>Vos droits : </Text>
-            vous pouvez effacer votre historique ou modifier vos informations à
-            tout moment depuis les paramètres. La suppression de l'application
-            entraîne la disparition définitive de ces données locales.
-          </Text>
-          <Text style={styles.paragraph}>
-            Pour toute question relative à la confidentialité, vous pouvez nous
-            contacter à l'adresse support@example.com.
-          </Text>
+  Nous attachons une grande importance à la protection de vos données.
+  Cette charte explique comment l'application Assistant Courrier,
+  développée par Drcomputer60290, collecte, utilise et sécurise vos
+  informations personnelles.
+</Text>
+
+<Text style={styles.paragraph}>
+  <Text style={{ fontWeight: 'bold' }}>Données collectées : </Text>
+  Les données suivantes peuvent être enregistrées uniquement sur votre appareil :
+  vos informations de profil (nom, prénom, adresse email, téléphone),
+  l’historique des courriers générés et les textes transmis pour génération
+  via l’IA. Ces textes sont envoyés de manière sécurisée à OpenAI.
+</Text>
+
+<Text style={styles.paragraph}>
+  <Text style={{ fontWeight: 'bold' }}>Utilisation des données : </Text>
+  Ces données servent uniquement à personnaliser vos courriers et à
+  vous permettre de les retrouver facilement. Elles ne sont jamais partagées
+  avec des tiers sans votre accord explicite.
+</Text>
+
+<Text style={styles.paragraph}>
+  <Text style={{ fontWeight: 'bold' }}>Stockage et sécurité : </Text>
+  Toutes les données sont stockées localement sur votre téléphone à l'aide
+  de AsyncStorage. Aucune information n'est envoyée à nos serveurs.
+  Les échanges avec le service OpenAI utilisent le protocole HTTPS pour
+  garantir la sécurité et la confidentialité de vos données.
+</Text>
+
+<Text style={styles.paragraph}>
+  <Text style={{ fontWeight: 'bold' }}>Vos droits : </Text>
+  Vous pouvez à tout moment modifier vos informations ou effacer votre
+  historique depuis l’onglet Profil. La suppression de l’application entraîne
+  l’effacement définitif de toutes les données locales.
+</Text>
+
+<Text style={styles.paragraph}>
+  <Text style={{ fontWeight: 'bold' }}>Responsable de l'application : </Text>
+  Drcomputer60290 – M. Albert Benjamin, 81 rue René Cassin, France.
+</Text>
+
+<Text style={styles.paragraph}>
+  <Text style={{ fontWeight: 'bold' }}>Contact : </Text>
+  Pour toute question relative à la confidentialité, vous pouvez nous contacter
+  par email à webmaster@drcomputer60290.fr ou par téléphone au 07 86 99 08 35.
+</Text>
+
         </Card>
 
         <View style={styles.bottomSpacing} />
