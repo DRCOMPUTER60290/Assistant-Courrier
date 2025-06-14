@@ -27,12 +27,12 @@ The `dev` script launches the Expo development server. Follow the instructions i
 The preview screen now calls a serverless function (`api/generate-letter.ts`) which hides the OpenAI API key on the server. Configure the following environment variables:
 
 - `OPENAI_API_KEY` – used by the serverless function. **Do not commit this key.**
-- `EXPO_PUBLIC_API_URL` – base URL of your deployment (e.g. `https://your-app.vercel.app`).
+- `EXPO_PUBLIC_API_URL` – base URL of your deployment (e.g. `https://assistant-backend-yrbx.onrender.com`).
 
 Run the app with:
 
 ```bash
-OPENAI_API_KEY=sk-your-key EXPO_PUBLIC_API_URL=https://your-app.vercel.app npm run dev
+OPENAI_API_KEY=sk-your-key EXPO_PUBLIC_API_URL=https://assistant-backend-yrbx.onrender.com npm run dev
 ```
 
 ### Additional npm scripts
