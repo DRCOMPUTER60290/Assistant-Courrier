@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Share } from 'react-native';
 import { Share as ShareIcon, FileDown, Trash2, Eye } from 'lucide-react-native';
+import { router } from 'expo-router';
 import * as Print from 'expo-print';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
@@ -37,7 +38,7 @@ export default function LetterCard({ letter, onDelete }: LetterCardProps) {
   };
 
   const handleView = () => {
-    Alert.alert('Aperçu', letter.content.substring(0, 200) + '...');
+    router.push({ pathname: '/letter-preview', params: { content: letter.content } });
   };
 
   const formatDate = (date: Date) => {
