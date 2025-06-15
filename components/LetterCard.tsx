@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { Share, FileDown, Trash2, Eye } from 'lucide-react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Share } from 'react-native';
+import { Share as ShareIcon, FileDown, Trash2, Eye } from 'lucide-react-native';
 import * as Print from 'expo-print';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
@@ -18,8 +18,7 @@ export default function LetterCard({ letter, onDelete }: LetterCardProps) {
   
   const handleShare = async () => {
     try {
-      // En production, implémenter le partage natif
-      Alert.alert('Partage', 'Fonctionnalité de partage à implémenter');
+      await Share.share({ message: letter.content });
     } catch (error) {
       Alert.alert('Erreur', 'Impossible de partager le courrier');
     }
@@ -82,7 +81,7 @@ export default function LetterCard({ letter, onDelete }: LetterCardProps) {
         </TouchableOpacity>
         
         <TouchableOpacity style={styles.actionButton} onPress={handleShare}>
-          <Share size={18} color="#6b7280" />
+          <ShareIcon size={18} color="#6b7280" />
         </TouchableOpacity>
         
         <TouchableOpacity style={styles.actionButton} onPress={handleDownload}>

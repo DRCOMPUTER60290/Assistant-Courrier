@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
   Linking,
+  Share,
 } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import Header from '@/components/Header';
@@ -26,9 +27,9 @@ export default function LetterPreviewScreen() {
   const { content } = useLocalSearchParams<{ content?: string }>();
 
   const handleShare = async () => {
+    if (!content) return;
     try {
-      // En production, implémenter le partage natif
-      Alert.alert('Partage', 'Fonctionnalité de partage à implémenter');
+      await Share.share({ message: content });
     } catch (error) {
       Alert.alert('Erreur', 'Impossible de partager le courrier');
     }
