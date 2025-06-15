@@ -1,6 +1,7 @@
 import { Tabs } from 'expo-router';
 import { Chrome as Home, FileText, History, Settings } from 'lucide-react-native';
 import { View, StyleSheet, Platform } from 'react-native';
+import { useMemo } from 'react';
 import { useTheme } from '@/contexts/ThemeContext';
 
 export default function TabLayout() {
