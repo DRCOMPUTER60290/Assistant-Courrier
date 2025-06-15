@@ -5,12 +5,29 @@ const API_BASE_URL = 'https://assistant-backend-yrbx.onrender.com';
 class LetterService {
   async generateLetter(request: LetterRequest): Promise<string> {
     try {
-      const response = await fetch(`${API_BASE_URL}/generate-letter`, {
+      const { userProfile, recipient, letterType, additionalInfo } = request;
+
+      const promptParts = [
+        `Profil utilisateur : ${userProfile.firstName} ${userProfile.lastName}, ` +
+          `${userProfile.address}, ${userProfile.postalCode} ${userProfile.city}, ` +
+          `${userProfile.email}, ${userProfile.phone}`,
+        `Destinataire : ${
+          recipient.company ? recipient.company + ', ' : ''
+        }${recipient.service ? recipient.service + ', ' : ''}${
+          recipient.firstName ? recipient.firstName + ' ' + recipient.lastName + ', ' : ''
+        }${recipient.address}, ${recipient.postalCode} ${recipient.city}`,
+        `Type de courrier : ${letterType}`,
+        `Informations supplémentaires : ${JSON.stringify(additionalInfo)}`,
+      ];
+
+      const prompt = promptParts.join('. ');
+
+      const response = await fetch(`${API_BASE_URL}/api/generate-letter`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(request),
+        body: JSON.stringify({ prompt }),
       });
 
       if (!response.ok) {
