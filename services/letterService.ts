@@ -7,20 +7,18 @@ class LetterService {
     try {
       const { userProfile, recipient, letterType, additionalInfo } = request;
 
-      const promptParts = [
-        `Profil utilisateur : ${userProfile.firstName} ${userProfile.lastName}, ` +
-          `${userProfile.address}, ${userProfile.postalCode} ${userProfile.city}, ` +
-          `${userProfile.email}, ${userProfile.phone}`,
-        `Destinataire : ${
-          recipient.company ? recipient.company + ', ' : ''
-        }${recipient.service ? recipient.service + ', ' : ''}${
-          recipient.firstName ? recipient.firstName + ' ' + recipient.lastName + ', ' : ''
-        }${recipient.address}, ${recipient.postalCode} ${recipient.city}`,
+      const promptParts: string[] = [
+        `Profil utilisateur : ${userProfile.firstName} ${userProfile.lastName}, ${userProfile.address}, ${userProfile.postalCode} ${userProfile.city}, ${userProfile.email}, ${userProfile.phone}`,
+        `Destinataire : ${[
+          recipient.company,
+          recipient.service,
+          recipient.firstName && recipient.lastName ? `${recipient.firstName} ${recipient.lastName}` : null
+        ].filter(Boolean).join(', ')}, ${recipient.address}, ${recipient.postalCode} ${recipient.city}${recipient.email ? `, ${recipient.email}` : ''}`,
         `Type de courrier : ${letterType}`,
         `Informations supplémentaires : ${JSON.stringify(additionalInfo)}`,
       ];
 
-      const prompt = promptParts.join('. ');
+      const prompt = promptParts.join('\n');
 
       const response = await fetch(`${API_BASE_URL}/api/generate-letter`, {
         method: 'POST',
@@ -30,11 +28,15 @@ class LetterService {
         body: JSON.stringify({ prompt }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error('Erreur lors de la génération du courrier');
+        const message = data && typeof data.error === 'string'
+          ? data.error
+          : 'Erreur lors de la génération du courrier';
+        throw new Error(message);
       }
 
-      const data = await response.json();
       return data.content;
     } catch (error) {
       console.error('Erreur API:', error);
@@ -43,8 +45,6 @@ class LetterService {
   }
 
   async saveUserProfile(profile: UserProfile): Promise<void> {
-    // Simulation d'une sauvegarde locale
-    // En production, utiliser AsyncStorage ou une base de données
     try {
       const profileData = JSON.stringify(profile);
       // await AsyncStorage.setItem('userProfile', profileData);
@@ -59,8 +59,7 @@ class LetterService {
     try {
       // const profileData = await AsyncStorage.getItem('userProfile');
       // return profileData ? JSON.parse(profileData) : null;
-      
-      // Simulation d'un profil pour la démo
+
       return {
         firstName: 'Jean',
         lastName: 'Dupont',
@@ -91,8 +90,7 @@ class LetterService {
     try {
       // const lettersData = await AsyncStorage.getItem('letters');
       // return lettersData ? JSON.parse(lettersData) : [];
-      
-      // Simulation d'historique pour la démo
+
       return [
         {
           id: '1',
@@ -152,14 +150,13 @@ class LetterService {
   async getStatistics(): Promise<Statistics> {
     try {
       const letters = await this.getLetters();
-      
+
       const totalLetters = letters.length;
       const lettersByType = letters.reduce((acc, letter) => {
         acc[letter.type] = (acc[letter.type] || 0) + 1;
         return acc;
       }, {} as Record<string, number>);
 
-      // Simulation d'activité récente
       const recentActivity = [
         { day: 'Lun', count: 2 },
         { day: 'Mar', count: 1 },
