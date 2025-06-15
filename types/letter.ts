@@ -40,6 +40,7 @@ export type LetterType =
   | 'remerciement'
   | 'motivation'
   | 'excuse'
+  | 'conge'
   | 'administrative'
   | 'commercial'
   | 'autres';
