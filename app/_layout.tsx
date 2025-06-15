@@ -6,7 +6,7 @@ import { SplashScreen } from 'expo-router';
 import { useFrameworkReady } from '@/hooks/useFrameworkReady';
 import { ThemeProvider, useTheme } from '@/contexts/ThemeContext';
 
-// Prevent splash screen from auto-hiding
+// Empêche l'écran de chargement de se fermer automatiquement
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
