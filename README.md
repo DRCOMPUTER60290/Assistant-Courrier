@@ -20,3 +20,7 @@ npm run dev
 - View history
 - Manage settings
 - Preview letters
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
