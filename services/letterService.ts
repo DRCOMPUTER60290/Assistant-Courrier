@@ -109,6 +109,22 @@ class LetterService {
           updatedAt: new Date('2024-01-10'),
           status: 'completed',
         },
+        {
+          id: '3',
+          type: 'conge',
+          title: 'Demande de congé annuel',
+          content: 'Objet : Demande de congé du 01/08 au 15/08...',
+          recipient: {
+            company: 'ACME Corp',
+            service: 'Ressources Humaines',
+            address: '50 Rue Exemple',
+            postalCode: '69000',
+            city: 'Lyon',
+          },
+          createdAt: new Date('2024-01-05'),
+          updatedAt: new Date('2024-01-05'),
+          status: 'completed',
+        },
       ];
     } catch (error) {
       console.error('Erreur chargement courriers:', error);
