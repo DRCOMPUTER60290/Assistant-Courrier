@@ -1,12 +1,16 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Linking, Alert } from 'react-native';
-import { ExternalLink, Shield, FileText, Info, RotateCcw, Globe } from 'lucide-react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Linking, Alert, Switch } from 'react-native';
+import { ExternalLink, Shield, FileText, Info, RotateCcw, Globe, Moon } from 'lucide-react-native';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface SettingsSectionProps {
   onResetProfile: () => void;
 }
 
 export default function SettingsSection({ onResetProfile }: SettingsSectionProps) {
+  const { theme, toggleTheme } = useTheme();
+
+  const isDarkMode = theme === 'dark';
   const openLink = (url: string, title: string) => {
     Alert.alert(
       title,
@@ -65,7 +69,7 @@ export default function SettingsSection({ onResetProfile }: SettingsSectionProps
           return (
             <TouchableOpacity
               key={index}
-              style={[styles.settingItem, index < settingsItems.length - 1 && styles.borderBottom]}
+              style={[styles.settingItem, index < settingsItems.length && styles.borderBottom]}
               onPress={item.onPress}
             >
               <View style={styles.settingIcon}>
@@ -79,6 +83,25 @@ export default function SettingsSection({ onResetProfile }: SettingsSectionProps
             </TouchableOpacity>
           );
         })}
+      </View>
+
+      <View style={styles.card}>
+        <TouchableOpacity
+          style={styles.settingItem}
+          onPress={toggleTheme}
+        >
+          <View style={styles.settingIcon}>
+            <Moon size={20} color="#6b7280" />
+          </View>
+          <View style={styles.settingContent}>
+            <Text style={styles.settingTitle}>Mode sombre</Text>
+          </View>
+          <Switch
+            value={isDarkMode}
+            onValueChange={toggleTheme}
+            style={styles.settingSwitch}
+          />
+        </TouchableOpacity>
       </View>
 
       <View style={styles.card}>
@@ -160,6 +183,9 @@ const styles = StyleSheet.create({
   },
   settingContent: {
     flex: 1,
+  },
+  settingSwitch: {
+    marginLeft: 'auto',
   },
   settingTitle: {
     fontSize: 16,
