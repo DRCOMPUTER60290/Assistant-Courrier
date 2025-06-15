@@ -4,6 +4,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SplashScreen } from 'expo-router';
 import { useFrameworkReady } from '@/hooks/useFrameworkReady';
+import { ThemeProvider, useTheme } from '@/contexts/ThemeContext';
 
 // Prevent splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
@@ -28,12 +29,22 @@ export default function RootLayout() {
   }
 
   return (
+    <ThemeProvider>
+      <RootContent />
+    </ThemeProvider>
+  );
+}
+
+function RootContent() {
+  const { theme } = useTheme();
+
+  return (
     <>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
-      <StatusBar style="dark" />
+      <StatusBar style={theme === 'dark' ? 'light' : 'dark'} />
     </>
   );
 }
