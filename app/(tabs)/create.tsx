@@ -9,6 +9,7 @@ import LoadingOverlay from '@/components/LoadingOverlay';
 import { LetterType, Recipient, UserProfile } from '@/types/letter';
 import { letterService } from '@/services/letterService';
 import { useTheme } from '@/contexts/ThemeContext';
+import { formatLetterHeader } from '@/utils/formatLetterHeader';
 import { FileText, Send } from 'lucide-react-native';
 import { router } from 'expo-router';
 
@@ -60,7 +61,7 @@ export default function CreateScreen() {
     }
 
     setIsGenerating(true);
-    
+
     try {
       const letterRequest = {
         userProfile,
@@ -70,12 +71,14 @@ export default function CreateScreen() {
       };
 
       const generatedContent = await letterService.generateLetter(letterRequest);
-      
-      // Naviguer vers la page de prévisualisation
+
+      const header = formatLetterHeader(userProfile, recipient);
+      const fullContent = header + generatedContent;
+
       router.push({
         pathname: '/letter-preview',
         params: {
-          content: generatedContent,
+          content: fullContent,
           type: selectedType,
           recipientData: JSON.stringify(recipient),
         },

@@ -1,4 +1,13 @@
-import React, { createContext, useContext } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useMemo,
+} from 'react';
+import { Appearance } from 'react-native';
+
+export type ThemeName = 'light' | 'dark';
 
 export type Theme = {
   background: string;
@@ -34,19 +43,52 @@ const lightColors: Theme = {
   shadow: '#000',
 };
 
+const darkColors: Theme = {
+  background: '#0f172a',
+  card: '#1e293b',
+  textPrimary: '#f8fafc',
+  textSecondary: '#cbd5e1',
+  textMuted: '#94a3b8',
+  primary: '#3b82f6',
+  success: '#22c55e',
+  danger: '#ef4444',
+  border: '#334155',
+  borderAlt: '#475569',
+  highlight: '#1e3a8a',
+  surfaceLight: '#1e293b',
+  surfaceMuted: '#334155',
+  shadow: '#000',
+};
+
 interface ThemeContextValue {
+  theme: ThemeName;
   colors: Theme;
+  toggleTheme: () => void;
 }
 
-const ThemeContext = createContext<ThemeContextValue>({ colors: lightColors });
+const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
-export const ThemeProvider = ({ children }: React.PropsWithChildren<{}>) => {
+export function ThemeProvider({ children }: { children: ReactNode }) {
+  const systemTheme = Appearance.getColorScheme();
+  const [theme, setTheme] = useState<ThemeName>(systemTheme === 'dark' ? 'dark' : 'light');
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
+  };
+
+  const colors = useMemo(() => (theme === 'dark' ? darkColors : lightColors), [theme]);
+
   return (
-    <ThemeContext.Provider value={{ colors: lightColors }}>
+    <ThemeContext.Provider value={{ theme, colors, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );
-};
+}
 
-export const useTheme = () => useContext(ThemeContext);
-
+export function useTheme() {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error('useTheme must be used within a ThemeProvider');
+  }
+  return context;
+}

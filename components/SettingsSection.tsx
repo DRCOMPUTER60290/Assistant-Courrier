@@ -1,6 +1,21 @@
 import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Linking, Alert } from 'react-native';
-import { ExternalLink, Shield, FileText, Info, RotateCcw, Globe } from 'lucide-react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Linking,
+  Alert,
+  Switch,
+} from 'react-native';
+import {
+  ExternalLink,
+  Shield,
+  FileText,
+  Info,
+  RotateCcw,
+  Moon,
+} from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
 
 interface SettingsSectionProps {
@@ -8,10 +23,14 @@ interface SettingsSectionProps {
 }
 
 export default function SettingsSection({ onResetProfile }: SettingsSectionProps) {
+  const { theme, toggleTheme, colors } = useTheme();
+
+  const isDarkMode = theme === 'dark';
+
   const openLink = (url: string, title: string) => {
     Alert.alert(
       title,
-      'Cette fonctionnalité ouvre un lien externe. En production, les pages légales seraient intégrées à l\'application.',
+      "Cette fonctionnalité ouvre un lien externe. En production, les pages légales seraient intégrées à l'application.",
       [
         { text: 'Annuler', style: 'cancel' },
         { text: 'Ouvrir', onPress: () => Linking.openURL(url) },
@@ -29,7 +48,7 @@ export default function SettingsSection({ onResetProfile }: SettingsSectionProps
     {
       icon: FileText,
       title: 'Conditions générales',
-      description: 'Conditions d\'utilisation de l\'application',
+      description: "Conditions d'utilisation de l'application",
       onPress: () => openLink('https://example.com/terms', 'Conditions générales'),
     },
     {
@@ -56,7 +75,6 @@ export default function SettingsSection({ onResetProfile }: SettingsSectionProps
     },
   ];
 
-  const { colors } = useTheme();
   const styles = useMemo(
     () =>
       StyleSheet.create({
@@ -97,6 +115,7 @@ export default function SettingsSection({ onResetProfile }: SettingsSectionProps
         },
         dangerousIcon: { backgroundColor: colors.danger + '20' },
         settingContent: { flex: 1 },
+        settingSwitch: { marginLeft: 'auto' },
         settingTitle: {
           fontSize: 16,
           fontFamily: 'Roboto-Medium',
@@ -129,7 +148,7 @@ export default function SettingsSection({ onResetProfile }: SettingsSectionProps
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Paramètres</Text>
-      
+
       <View style={styles.card}>
         {settingsItems.map((item, index) => {
           const IconComponent = item.icon;
@@ -150,6 +169,25 @@ export default function SettingsSection({ onResetProfile }: SettingsSectionProps
             </TouchableOpacity>
           );
         })}
+      </View>
+
+      <View style={styles.card}>
+        <TouchableOpacity
+          style={styles.settingItem}
+          onPress={toggleTheme}
+        >
+          <View style={styles.settingIcon}>
+            <Moon size={20} color={colors.textSecondary} />
+          </View>
+          <View style={styles.settingContent}>
+            <Text style={styles.settingTitle}>Mode sombre</Text>
+          </View>
+          <Switch
+            value={isDarkMode}
+            onValueChange={toggleTheme}
+            style={styles.settingSwitch}
+          />
+        </TouchableOpacity>
       </View>
 
       <View style={styles.card}>

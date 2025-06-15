@@ -1,14 +1,17 @@
 import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ArrowLeft } from 'lucide-react-native';
+import { router } from 'expo-router';
 import { useTheme } from '@/contexts/ThemeContext';
 
 interface HeaderProps {
   title: string;
   subtitle?: string;
+  showBack?: boolean;
 }
 
-export default function Header({ title, subtitle }: HeaderProps) {
+export default function Header({ title, subtitle, showBack }: HeaderProps) {
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
 
@@ -23,11 +26,19 @@ export default function Header({ title, subtitle }: HeaderProps) {
           paddingHorizontal: 20,
           paddingTop: 16,
         },
+        titleRow: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginBottom: 4,
+        },
+        backButton: {
+          marginRight: 8,
+          padding: 4,
+        },
         title: {
           fontSize: 28,
           fontFamily: 'Roboto-Bold',
           color: colors.card,
-          marginBottom: 4,
         },
         subtitle: {
           fontSize: 16,
@@ -39,10 +50,19 @@ export default function Header({ title, subtitle }: HeaderProps) {
     [colors]
   );
 
+  const shouldShowBack = showBack || router.canGoBack();
+
   return (
     <View style={[styles.header, { paddingTop: insets.top }]}>
       <View style={styles.content}>
-        <Text style={styles.title}>{title}</Text>
+        <View style={styles.titleRow}>
+          {shouldShowBack && (
+            <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+              <ArrowLeft size={24} color="#ffffff" />
+            </TouchableOpacity>
+          )}
+          <Text style={styles.title}>{title}</Text>
+        </View>
         {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
       </View>
     </View>

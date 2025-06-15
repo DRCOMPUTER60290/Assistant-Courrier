@@ -269,7 +269,6 @@ export default function ProfileSection({ profile, onUpdateProfile, loading }: Pr
             <ActionButton
               title="Annuler"
               onPress={handleCancel}
-              variant="outline"
               size="medium"
             />
           </View>
