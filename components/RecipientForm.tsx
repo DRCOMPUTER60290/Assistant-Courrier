@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { useTheme } from '@/contexts/ThemeContext';
 import { Recipient } from '@/types/letter';
 import FormInput from '@/components/FormInput';
 
@@ -15,6 +16,26 @@ export default function RecipientForm({ recipient, onUpdateRecipient }: Recipien
       [field]: value,
     });
   };
+
+  const { colors } = useTheme();
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: { marginBottom: 8 },
+        title: {
+          fontSize: 18,
+          fontFamily: 'Roboto-Bold',
+          color: colors.textPrimary,
+          marginBottom: 16,
+        },
+        form: { gap: 16 },
+        row: { flexDirection: 'row', gap: 12 },
+        halfInput: { flex: 1 },
+        smallInput: { flex: 0.3 },
+        largeInput: { flex: 0.7 },
+      }),
+    [colors]
+  );
 
   return (
     <View style={styles.container}>
@@ -93,31 +114,3 @@ export default function RecipientForm({ recipient, onUpdateRecipient }: Recipien
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 8,
-  },
-  title: {
-    fontSize: 18,
-    fontFamily: 'Roboto-Bold',
-    color: '#1f2937',
-    marginBottom: 16,
-  },
-  form: {
-    gap: 16,
-  },
-  row: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  halfInput: {
-    flex: 1,
-  },
-  smallInput: {
-    flex: 0.3,
-  },
-  largeInput: {
-    flex: 0.7,
-  },
-});

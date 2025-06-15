@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { LetterType } from '@/types/letter';
 import { LETTER_TYPES } from '@/constants/letterTypes';
 import * as Icons from 'lucide-react-native';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface LetterTypeSelectorProps {
   selectedType: LetterType | null;
@@ -10,6 +11,65 @@ interface LetterTypeSelectorProps {
 }
 
 export default function LetterTypeSelector({ selectedType, onSelectType }: LetterTypeSelectorProps) {
+  const { colors } = useTheme();
+
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: { marginBottom: 8 },
+        title: {
+          fontSize: 18,
+          fontFamily: 'Roboto-Bold',
+          color: colors.textPrimary,
+          marginBottom: 16,
+        },
+        scrollContainer: { marginHorizontal: -4 },
+        typeGrid: { flexDirection: 'row', paddingHorizontal: 4, gap: 12 },
+        typeCard: {
+          backgroundColor: colors.card,
+          borderRadius: 16,
+          padding: 16,
+          width: 180,
+          borderLeftWidth: 4,
+          shadowColor: colors.shadow,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 8,
+          elevation: 4,
+        },
+        selectedCard: {
+          backgroundColor: colors.highlight,
+          borderColor: colors.primary,
+          borderWidth: 2,
+          borderLeftWidth: 4,
+        },
+        iconContainer: {
+          width: 48,
+          height: 48,
+          borderRadius: 12,
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginBottom: 12,
+        },
+        typeContent: { flex: 1 },
+        typeTitle: {
+          fontSize: 16,
+          fontFamily: 'Roboto-Bold',
+          color: colors.textPrimary,
+          marginBottom: 6,
+        },
+        typeDescription: {
+          fontSize: 13,
+          fontFamily: 'Roboto-Regular',
+          color: '#64748b',
+          lineHeight: 18,
+        },
+        selectedText: { color: colors.primary },
+        selectedDescription: { color: colors.primary, opacity: 0.8 },
+      }),
+    [colors]
+  );
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Type de courrier</Text>
@@ -49,74 +109,3 @@ export default function LetterTypeSelector({ selectedType, onSelectType }: Lette
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 8,
-  },
-  title: {
-    fontSize: 18,
-    fontFamily: 'Roboto-Bold',
-    color: '#1f2937',
-    marginBottom: 16,
-  },
-  scrollContainer: {
-    marginHorizontal: -4,
-  },
-  typeGrid: {
-    flexDirection: 'row',
-    paddingHorizontal: 4,
-    gap: 12,
-  },
-  typeCard: {
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
-    padding: 16,
-    width: 180,
-    borderLeftWidth: 4,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  selectedCard: {
-    backgroundColor: '#f0f9ff',
-    borderColor: '#1e40af',
-    borderWidth: 2,
-    borderLeftWidth: 4,
-  },
-  iconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 12,
-  },
-  typeContent: {
-    flex: 1,
-  },
-  typeTitle: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Bold',
-    color: '#1f2937',
-    marginBottom: 6,
-  },
-  typeDescription: {
-    fontSize: 13,
-    fontFamily: 'Roboto-Regular',
-    color: '#64748b',
-    lineHeight: 18,
-  },
-  selectedText: {
-    color: '#1e40af',
-  },
-  selectedDescription: {
-    color: '#1e40af',
-    opacity: 0.8,
-  },
-});

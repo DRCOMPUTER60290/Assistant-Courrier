@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Share } from 'react-native';
 import { Share as ShareIcon, FileDown, Trash2, Eye } from 'lucide-react-native';
 import { router } from 'expo-router';
@@ -8,6 +8,7 @@ import * as Sharing from 'expo-sharing';
 import { Letter } from '@/types/letter';
 import { LETTER_TYPES } from '@/constants/letterTypes';
 import ActionButton from '@/components/ActionButton';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface LetterCardProps {
   letter: Letter;
@@ -16,6 +17,86 @@ interface LetterCardProps {
 
 export default function LetterCard({ letter, onDelete }: LetterCardProps) {
   const letterTypeInfo = LETTER_TYPES.find(type => type.type === letter.type);
+  const { colors } = useTheme();
+
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        card: {
+          backgroundColor: colors.card,
+          borderRadius: 16,
+          padding: 20,
+          shadowColor: colors.shadow,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 8,
+          elevation: 4,
+        },
+        header: {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: 12,
+        },
+        letterInfo: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 12,
+        },
+        typeBadge: {
+          paddingHorizontal: 12,
+          paddingVertical: 4,
+          borderRadius: 20,
+        },
+        typeText: {
+          fontSize: 12,
+          fontFamily: 'Roboto-Medium',
+        },
+        date: {
+          fontSize: 12,
+          fontFamily: 'Roboto-Regular',
+          color: colors.textSecondary,
+        },
+        title: {
+          fontSize: 16,
+          fontFamily: 'Roboto-Bold',
+          color: colors.textPrimary,
+          marginBottom: 12,
+        },
+        recipientInfo: { marginBottom: 16 },
+        recipientLabel: {
+          fontSize: 12,
+          fontFamily: 'Roboto-Medium',
+          color: colors.textSecondary,
+          marginBottom: 4,
+        },
+        recipientText: {
+          fontSize: 14,
+          fontFamily: 'Roboto-Medium',
+          color: colors.textPrimary,
+        },
+        recipientAddress: {
+          fontSize: 12,
+          fontFamily: 'Roboto-Regular',
+          color: colors.textSecondary,
+        },
+        actions: {
+          flexDirection: 'row',
+          justifyContent: 'flex-end',
+          gap: 8,
+        },
+        actionButton: {
+          width: 40,
+          height: 40,
+          borderRadius: 20,
+          backgroundColor: colors.background,
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+        deleteButton: { backgroundColor: colors.danger + '20' },
+      }),
+    [colors]
+  );
   
   const handleShare = async () => {
     try {
@@ -78,103 +159,21 @@ export default function LetterCard({ letter, onDelete }: LetterCardProps) {
       
       <View style={styles.actions}>
         <TouchableOpacity style={styles.actionButton} onPress={handleView}>
-          <Eye size={18} color="#6b7280" />
+          <Eye size={18} color={colors.textSecondary} />
         </TouchableOpacity>
         
         <TouchableOpacity style={styles.actionButton} onPress={handleShare}>
-          <ShareIcon size={18} color="#6b7280" />
+          <ShareIcon size={18} color={colors.textSecondary} />
         </TouchableOpacity>
         
         <TouchableOpacity style={styles.actionButton} onPress={handleDownload}>
-          <FileDown size={18} color="#6b7280" />
+          <FileDown size={18} color={colors.textSecondary} />
         </TouchableOpacity>
         
         <TouchableOpacity style={[styles.actionButton, styles.deleteButton]} onPress={onDelete}>
-          <Trash2 size={18} color="#ef4444" />
+          <Trash2 size={18} color={colors.danger} />
         </TouchableOpacity>
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  letterInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  typeBadge: {
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 20,
-  },
-  typeText: {
-    fontSize: 12,
-    fontFamily: 'Roboto-Medium',
-  },
-  date: {
-    fontSize: 12,
-    fontFamily: 'Roboto-Regular',
-    color: '#6b7280',
-  },
-  title: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Bold',
-    color: '#1f2937',
-    marginBottom: 12,
-  },
-  recipientInfo: {
-    marginBottom: 16,
-  },
-  recipientLabel: {
-    fontSize: 12,
-    fontFamily: 'Roboto-Medium',
-    color: '#6b7280',
-    marginBottom: 4,
-  },
-  recipientText: {
-    fontSize: 14,
-    fontFamily: 'Roboto-Medium',
-    color: '#1f2937',
-  },
-  recipientAddress: {
-    fontSize: 12,
-    fontFamily: 'Roboto-Regular',
-    color: '#6b7280',
-  },
-  actions: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    gap: 8,
-  },
-  actionButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#f8fafc',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  deleteButton: {
-    backgroundColor: '#fef2f2',
-  },
-});

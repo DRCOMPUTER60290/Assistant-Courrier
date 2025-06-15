@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
 import { Camera, User, CreditCard as Edit } from 'lucide-react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { UserProfile } from '@/types/letter';
 import FormInput from '@/components/FormInput';
 import ActionButton from '@/components/ActionButton';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface ProfileSectionProps {
   profile: UserProfile | null;
@@ -14,6 +15,79 @@ interface ProfileSectionProps {
 
 export default function ProfileSection({ profile, onUpdateProfile, loading }: ProfileSectionProps) {
   const [isEditing, setIsEditing] = useState(false);
+  const { colors } = useTheme();
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: { marginBottom: 8 },
+        header: {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: 16,
+        },
+        title: {
+          fontSize: 18,
+          fontFamily: 'Roboto-Bold',
+          color: colors.textPrimary,
+        },
+        editButton: {
+          width: 40,
+          height: 40,
+          borderRadius: 20,
+          backgroundColor: colors.highlight,
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+        card: {
+          backgroundColor: colors.card,
+          borderRadius: 16,
+          padding: 20,
+          shadowColor: colors.shadow,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 8,
+          elevation: 4,
+        },
+        loadingCard: {
+          backgroundColor: colors.card,
+          borderRadius: 16,
+          height: 200,
+        },
+        photoSection: { alignItems: 'center', marginBottom: 24 },
+        photoContainer: { marginBottom: 12 },
+        photo: { width: 80, height: 80, borderRadius: 40 },
+        photoPlaceholder: {
+          width: 80,
+          height: 80,
+          borderRadius: 40,
+          backgroundColor: colors.surfaceMuted,
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+        photoButton: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 6,
+          paddingHorizontal: 12,
+          paddingVertical: 6,
+          borderRadius: 16,
+          backgroundColor: colors.highlight,
+        },
+        photoButtonText: {
+          fontSize: 12,
+          fontFamily: 'Roboto-Medium',
+          color: colors.primary,
+        },
+        form: { gap: 16 },
+        row: { flexDirection: 'row', gap: 12 },
+        halfInput: { flex: 1 },
+        smallInput: { flex: 0.3 },
+        largeInput: { flex: 0.7 },
+        actions: { marginTop: 24, gap: 12 },
+      }),
+    [colors]
+  );
   const [editedProfile, setEditedProfile] = useState<UserProfile>(
     profile || {
       firstName: '',
@@ -203,100 +277,3 @@ export default function ProfileSection({ profile, onUpdateProfile, loading }: Pr
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 8,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 18,
-    fontFamily: 'Roboto-Bold',
-    color: '#1f2937',
-  },
-  editButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#f0f9ff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  card: {
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  loadingCard: {
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
-    height: 200,
-  },
-  photoSection: {
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  photoContainer: {
-    marginBottom: 12,
-  },
-  photo: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-  },
-  photoPlaceholder: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#f3f4f6',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  photoButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
-    backgroundColor: '#f0f9ff',
-  },
-  photoButtonText: {
-    fontSize: 12,
-    fontFamily: 'Roboto-Medium',
-    color: '#1e40af',
-  },
-  form: {
-    gap: 16,
-  },
-  row: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  halfInput: {
-    flex: 1,
-  },
-  smallInput: {
-    flex: 0.3,
-  },
-  largeInput: {
-    flex: 0.7,
-  },
-  actions: {
-    marginTop: 24,
-    gap: 12,
-  },
-});

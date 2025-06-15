@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import type { LucideIcon } from 'lucide-react-native';
 import ActionButton from '@/components/ActionButton';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface EmptyStateProps {
   icon: LucideIcon;
@@ -11,17 +12,50 @@ interface EmptyStateProps {
   onAction?: () => void;
 }
 
-export default function EmptyState({ 
+export default function EmptyState({
   icon: Icon, 
   title, 
   description, 
   actionTitle, 
   onAction 
 }: EmptyStateProps) {
+  const { colors } = useTheme();
+
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: {
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingHorizontal: 40,
+          paddingVertical: 60,
+        },
+        iconContainer: { marginBottom: 24 },
+        title: {
+          fontSize: 20,
+          fontFamily: 'Roboto-Bold',
+          color: colors.textPrimary,
+          textAlign: 'center',
+          marginBottom: 12,
+        },
+        description: {
+          fontSize: 16,
+          fontFamily: 'Roboto-Regular',
+          color: colors.textSecondary,
+          textAlign: 'center',
+          lineHeight: 24,
+          marginBottom: 32,
+        },
+        action: { width: '100%' },
+      }),
+    [colors]
+  );
+
   return (
     <View style={styles.container}>
       <View style={styles.iconContainer}>
-        <Icon size={64} color="#d1d5db" />
+        <Icon size={64} color={colors.borderAlt} />
       </View>
       
       <Text style={styles.title}>{title}</Text>
@@ -40,34 +74,3 @@ export default function EmptyState({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 40,
-    paddingVertical: 60,
-  },
-  iconContainer: {
-    marginBottom: 24,
-  },
-  title: {
-    fontSize: 20,
-    fontFamily: 'Roboto-Bold',
-    color: '#1f2937',
-    textAlign: 'center',
-    marginBottom: 12,
-  },
-  description: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Regular',
-    color: '#6b7280',
-    textAlign: 'center',
-    lineHeight: 24,
-    marginBottom: 32,
-  },
-  action: {
-    width: '100%',
-  },
-});

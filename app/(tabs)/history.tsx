@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { View, ScrollView, StyleSheet, RefreshControl, Alert } from 'react-native';
 import Header from '@/components/Header';
 import LetterCard from '@/components/LetterCard';
@@ -6,11 +6,23 @@ import EmptyState from '@/components/EmptyState';
 import { Letter } from '@/types/letter';
 import { letterService } from '@/services/letterService';
 import { FileText } from 'lucide-react-native';
+import { useTheme } from '@/contexts/ThemeContext';
 
 export default function HistoryScreen() {
   const [letters, setLetters] = useState<Letter[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const { colors } = useTheme();
+
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: { flex: 1, backgroundColor: colors.background },
+        content: { flex: 1, paddingHorizontal: 20 },
+        lettersList: { paddingTop: 20, paddingBottom: 32, gap: 16 },
+      }),
+    [colors]
+  );
 
   const loadLetters = async () => {
     try {
@@ -102,19 +114,3 @@ export default function HistoryScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f8fafc',
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: 20,
-  },
-  lettersList: {
-    paddingTop: 20,
-    paddingBottom: 32,
-    gap: 16,
-  },
-});

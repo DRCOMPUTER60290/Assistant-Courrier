@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { View, ScrollView, StyleSheet, Alert } from 'react-native';
 import Header from '@/components/Header';
 import LetterTypeSelector from '@/components/LetterTypeSelector';
@@ -8,6 +8,7 @@ import ActionButton from '@/components/ActionButton';
 import LoadingOverlay from '@/components/LoadingOverlay';
 import { LetterType, Recipient, UserProfile } from '@/types/letter';
 import { letterService } from '@/services/letterService';
+import { useTheme } from '@/contexts/ThemeContext';
 import { formatLetterHeader } from '@/utils/formatLetterHeader';
 import { FileText, Send } from 'lucide-react-native';
 import { router } from 'expo-router';
@@ -22,6 +23,18 @@ export default function CreateScreen() {
   const [additionalInfo, setAdditionalInfo] = useState<Record<string, any>>({});
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const { colors } = useTheme();
+
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: { flex: 1, backgroundColor: colors.background },
+        content: { flex: 1, paddingHorizontal: 20 },
+        section: { marginTop: 24 },
+        buttonGroup: { gap: 12, marginBottom: 32 },
+      }),
+    [colors]
+  );
 
   useEffect(() => {
     loadUserProfile();
@@ -48,7 +61,7 @@ export default function CreateScreen() {
     }
 
     setIsGenerating(true);
-    
+
     try {
       const letterRequest = {
         userProfile,
@@ -146,21 +159,3 @@ export default function CreateScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f8fafc',
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: 20,
-  },
-  section: {
-    marginTop: 24,
-  },
-  buttonGroup: {
-    gap: 12,
-    marginBottom: 32,
-  },
-});

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { Calendar } from 'lucide-react-native';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface FormDatePickerProps {
   label: string;
@@ -24,6 +25,40 @@ export default function FormDatePicker({ label, value, onDateChange, required }:
     setIsVisible(false);
   };
 
+  const { colors } = useTheme();
+
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: { marginBottom: 4 },
+        label: {
+          fontSize: 14,
+          fontFamily: 'Roboto-Medium',
+          color: colors.label ?? colors.textSecondary,
+          marginBottom: 8,
+        },
+        required: { color: colors.danger },
+        dateSelector: {
+          backgroundColor: colors.card,
+          borderWidth: 1,
+          borderColor: colors.borderAlt,
+          borderRadius: 12,
+          paddingHorizontal: 16,
+          paddingVertical: 12,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        },
+        dateText: {
+          fontSize: 16,
+          fontFamily: 'Roboto-Regular',
+          color: colors.textPrimary,
+        },
+        placeholder: { color: colors.textMuted },
+      }),
+    [colors]
+  );
+
   return (
     <View style={styles.container}>
       <Text style={styles.label}>
@@ -35,42 +70,8 @@ export default function FormDatePicker({ label, value, onDateChange, required }:
         <Text style={[styles.dateText, !value && styles.placeholder]}>
           {value || 'Sélectionner une date...'}
         </Text>
-        <Calendar size={20} color="#6b7280" />
+        <Calendar size={20} color={colors.textSecondary} />
       </TouchableOpacity>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 4,
-  },
-  label: {
-    fontSize: 14,
-    fontFamily: 'Roboto-Medium',
-    color: '#374151',
-    marginBottom: 8,
-  },
-  required: {
-    color: '#ef4444',
-  },
-  dateSelector: {
-    backgroundColor: '#ffffff',
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  dateText: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Regular',
-    color: '#1f2937',
-  },
-  placeholder: {
-    color: '#9ca3af',
-  },
-});

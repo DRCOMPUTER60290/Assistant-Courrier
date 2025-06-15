@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   View,
   ScrollView,
@@ -22,9 +22,48 @@ import {
 import * as Print from 'expo-print';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
+import { useTheme } from '@/contexts/ThemeContext';
 
 export default function LetterPreviewScreen() {
   const { content } = useLocalSearchParams<{ content?: string }>();
+  const { colors } = useTheme();
+
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: { flex: 1, backgroundColor: colors.background },
+        content: {
+          flex: 1,
+          paddingHorizontal: 20,
+          paddingVertical: 20,
+        },
+        letterText: {
+          fontSize: 16,
+          fontFamily: 'Roboto-Regular',
+          color: colors.textPrimary,
+          lineHeight: 24,
+        },
+        toolbar: {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          paddingHorizontal: 20,
+          paddingVertical: 12,
+          borderTopWidth: 1,
+          borderColor: colors.border,
+          backgroundColor: colors.card,
+          gap: 8,
+        },
+        toolbarButton: {
+          width: 40,
+          height: 40,
+          borderRadius: 20,
+          backgroundColor: colors.background,
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+      }),
+    [colors]
+  );
 
   const handleShare = async () => {
     if (!content) return;
@@ -79,57 +118,22 @@ export default function LetterPreviewScreen() {
           style={styles.toolbarButton}
           onPress={() => router.back()}
         >
-          <ArrowLeft size={18} color="#6b7280" />
+          <ArrowLeft size={18} color={colors.textSecondary} />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.toolbarButton} onPress={handleShare}>
-          <ShareIcon size={18} color="#6b7280" />
+          <ShareIcon size={18} color={colors.textSecondary} />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.toolbarButton} onPress={handleDownload}>
-          <FileDown size={18} color="#6b7280" />
+          <FileDown size={18} color={colors.textSecondary} />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.toolbarButton} onPress={handleEmail}>
-          <Mail size={18} color="#6b7280" />
+          <Mail size={18} color={colors.textSecondary} />
         </TouchableOpacity>
       </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f8fafc',
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-  },
-  letterText: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Regular',
-    color: '#1f2937',
-    lineHeight: 24,
-  },
-  toolbar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderTopWidth: 1,
-    borderColor: '#e5e7eb',
-    backgroundColor: '#ffffff',
-    gap: 8,
-  },
-  toolbarButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#f8fafc',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
