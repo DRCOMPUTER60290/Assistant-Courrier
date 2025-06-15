@@ -1,14 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { View, ScrollView, StyleSheet, Alert } from 'react-native';
 import Header from '@/components/Header';
 import ProfileSection from '@/components/ProfileSection';
 import SettingsSection from '@/components/SettingsSection';
+import { useTheme } from '@/contexts/ThemeContext';
 import { UserProfile } from '@/types/letter';
 import { letterService } from '@/services/letterService';
 
 export default function SettingsScreen() {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const { colors } = useTheme();
+
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: { flex: 1, backgroundColor: colors.background },
+        content: { flex: 1, paddingHorizontal: 20 },
+        section: { marginTop: 24 },
+      }),
+    [colors]
+  );
 
   const loadProfile = async () => {
     try {
@@ -81,17 +93,3 @@ export default function SettingsScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f8fafc',
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: 20,
-  },
-  section: {
-    marginTop: 24,
-  },
-});

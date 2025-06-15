@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { View, ScrollView, StyleSheet, RefreshControl, Text, Image } from 'react-native';
 import { FileText, TrendingUp, Calendar, Users, User } from 'lucide-react-native';
 import Header from '@/components/Header';
 import StatsCard from '@/components/StatsCard';
 import ActionButton from '@/components/ActionButton';
+import { useTheme } from '@/contexts/ThemeContext';
 import { letterService } from '@/services/letterService';
 import { Statistics, UserProfile } from '@/types/letter';
 import { router } from 'expo-router';
@@ -12,6 +13,63 @@ export default function HomeScreen() {
   const [stats, setStats] = useState<Statistics | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const { colors } = useTheme();
+
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: { flex: 1, backgroundColor: colors.background },
+        content: { flex: 1, paddingHorizontal: 20 },
+        welcomeSection: { marginTop: 20, marginBottom: 8 },
+        welcomeContent: {
+          backgroundColor: colors.card,
+          borderRadius: 16,
+          padding: 20,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          shadowColor: colors.shadow,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 8,
+          elevation: 4,
+        },
+        welcomeText: { flex: 1 },
+        greeting: {
+          fontSize: 22,
+          fontFamily: 'Roboto-Bold',
+          color: colors.textPrimary,
+          marginBottom: 4,
+        },
+        welcomeSubtext: {
+          fontSize: 16,
+          fontFamily: 'Roboto-Regular',
+          color: colors.textSecondary,
+          lineHeight: 22,
+        },
+        profileImageContainer: { marginLeft: 16 },
+        profileImage: {
+          width: 60,
+          height: 60,
+          borderRadius: 30,
+          borderWidth: 3,
+          borderColor: colors.border,
+        },
+        profilePlaceholder: {
+          width: 60,
+          height: 60,
+          borderRadius: 30,
+          backgroundColor: colors.surfaceMuted,
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderWidth: 3,
+          borderColor: colors.border,
+        },
+        section: { marginTop: 24 },
+        statsGrid: { flexDirection: 'row', marginBottom: 12 },
+      }),
+    [colors]
+  );
 
   const loadData = async () => {
     try {
@@ -81,7 +139,7 @@ export default function HomeScreen() {
                 <Image source={{ uri: userProfile.photoUri }} style={styles.profileImage} />
               ) : (
                 <View style={styles.profilePlaceholder}>
-                  <User size={24} color="#6b7280" />
+                  <User size={24} color={colors.textSecondary} />
                 </View>
               )}
             </View>
@@ -143,76 +201,3 @@ export default function HomeScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f8fafc',
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: 20,
-  },
-  welcomeSection: {
-    marginTop: 20,
-    marginBottom: 8,
-  },
-  welcomeContent: {
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
-    padding: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  welcomeText: {
-    flex: 1,
-  },
-  greeting: {
-    fontSize: 22,
-    fontFamily: 'Roboto-Bold',
-    color: '#1f2937',
-    marginBottom: 4,
-  },
-  welcomeSubtext: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Regular',
-    color: '#6b7280',
-    lineHeight: 22,
-  },
-  profileImageContainer: {
-    marginLeft: 16,
-  },
-  profileImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    borderWidth: 3,
-    borderColor: '#e5e7eb',
-  },
-  profilePlaceholder: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#f3f4f6',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 3,
-    borderColor: '#e5e7eb',
-  },
-  section: {
-    marginTop: 24,
-  },
-  statsGrid: {
-    flexDirection: 'row',
-    marginBottom: 12,
-  },
-});

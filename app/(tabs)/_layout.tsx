@@ -1,15 +1,31 @@
 import { Tabs } from 'expo-router';
 import { Chrome as Home, FileText, History, Settings } from 'lucide-react-native';
 import { View, StyleSheet, Platform } from 'react-native';
+import { useTheme } from '@/contexts/ThemeContext';
 
 export default function TabLayout() {
+  const { colors } = useTheme();
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        tabBar: {
+          borderTopWidth: 1,
+          paddingTop: 8,
+          paddingBottom: Platform.OS === 'ios' ? 34 : 8,
+          height: Platform.OS === 'ios' ? 88 : 64,
+        },
+        tabBarLabel: { fontFamily: 'Roboto-Medium', fontSize: 12, marginTop: 4 },
+        tabBarItem: { paddingTop: 4 },
+      }),
+    [colors]
+  );
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarStyle: styles.tabBar,
-        tabBarActiveTintColor: '#1e40af',
-        tabBarInactiveTintColor: '#64748b',
+        tabBarStyle: [styles.tabBar, { backgroundColor: colors.card, borderTopColor: colors.border }],
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.textSecondary,
         tabBarLabelStyle: styles.tabBarLabel,
         tabBarItemStyle: styles.tabBarItem,
       }}>
@@ -52,22 +68,3 @@ export default function TabLayout() {
     </Tabs>
   );
 }
-
-const styles = StyleSheet.create({
-  tabBar: {
-    backgroundColor: '#ffffff',
-    borderTopWidth: 1,
-    borderTopColor: '#e2e8f0',
-    paddingTop: 8,
-    paddingBottom: Platform.OS === 'ios' ? 34 : 8,
-    height: Platform.OS === 'ios' ? 88 : 64,
-  },
-  tabBarLabel: {
-    fontFamily: 'Roboto-Medium',
-    fontSize: 12,
-    marginTop: 4,
-  },
-  tabBarItem: {
-    paddingTop: 4,
-  },
-});

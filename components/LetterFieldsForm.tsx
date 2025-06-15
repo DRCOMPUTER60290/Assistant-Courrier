@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { useTheme } from '@/contexts/ThemeContext';
 import { LetterType } from '@/types/letter';
 import { LETTER_TYPES } from '@/constants/letterTypes';
 import FormInput from '@/components/FormInput';
@@ -14,6 +15,22 @@ interface LetterFieldsFormProps {
 
 export default function LetterFieldsForm({ letterType, values, onUpdateValues }: LetterFieldsFormProps) {
   const letterTypeInfo = LETTER_TYPES.find(type => type.type === letterType);
+  const { colors } = useTheme();
+
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: { marginBottom: 8 },
+        title: {
+          fontSize: 18,
+          fontFamily: 'Roboto-Bold',
+          color: colors.textPrimary,
+          marginBottom: 16,
+        },
+        form: { gap: 16 },
+      }),
+    [colors]
+  );
   
   if (!letterTypeInfo) return null;
 
@@ -90,18 +107,3 @@ export default function LetterFieldsForm({ letterType, values, onUpdateValues }:
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 8,
-  },
-  title: {
-    fontSize: 18,
-    fontFamily: 'Roboto-Bold',
-    color: '#1f2937',
-    marginBottom: 16,
-  },
-  form: {
-    gap: 16,
-  },
-});

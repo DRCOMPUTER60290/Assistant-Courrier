@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal, ScrollView } from 'react-native';
 import { ChevronDown, Check } from 'lucide-react-native';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface FormSelectProps {
   label: string;
@@ -12,6 +13,76 @@ interface FormSelectProps {
 
 export default function FormSelect({ label, value, onValueChange, options, required }: FormSelectProps) {
   const [isVisible, setIsVisible] = useState(false);
+  const { colors } = useTheme();
+
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: { marginBottom: 4 },
+        label: {
+          fontSize: 14,
+          fontFamily: 'Roboto-Medium',
+          color: colors.label ?? colors.textSecondary,
+          marginBottom: 8,
+        },
+        required: { color: colors.danger },
+        selector: {
+          backgroundColor: colors.card,
+          borderWidth: 1,
+          borderColor: colors.borderAlt,
+          borderRadius: 12,
+          paddingHorizontal: 16,
+          paddingVertical: 12,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        },
+        selectorText: {
+          fontSize: 16,
+          fontFamily: 'Roboto-Regular',
+          color: colors.textPrimary,
+        },
+        placeholder: { color: colors.textMuted },
+        overlay: {
+          flex: 1,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          justifyContent: 'flex-end',
+        },
+        modal: {
+          backgroundColor: colors.card,
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+          maxHeight: '50%',
+        },
+        modalHeader: {
+          padding: 20,
+          borderBottomWidth: 1,
+          borderBottomColor: colors.border,
+        },
+        modalTitle: {
+          fontSize: 18,
+          fontFamily: 'Roboto-Bold',
+          color: colors.textPrimary,
+          textAlign: 'center',
+        },
+        optionsList: { maxHeight: 300 },
+        option: {
+          paddingHorizontal: 20,
+          paddingVertical: 16,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          borderBottomWidth: 1,
+          borderBottomColor: colors.surfaceMuted,
+        },
+        optionText: {
+          fontSize: 16,
+          fontFamily: 'Roboto-Regular',
+          color: colors.textPrimary,
+        },
+      }),
+    [colors]
+  );
 
   const handleSelect = (selectedValue: string) => {
     onValueChange(selectedValue);
@@ -29,7 +100,7 @@ export default function FormSelect({ label, value, onValueChange, options, requi
         <Text style={[styles.selectorText, !value && styles.placeholder]}>
           {value || 'Sélectionner...'}
         </Text>
-        <ChevronDown size={20} color="#6b7280" />
+        <ChevronDown size={20} color={colors.textSecondary} />
       </TouchableOpacity>
 
       <Modal
@@ -56,7 +127,7 @@ export default function FormSelect({ label, value, onValueChange, options, requi
                 >
                   <Text style={styles.optionText}>{option}</Text>
                   {value === option && (
-                    <Check size={20} color="#1e40af" />
+                    <Check size={20} color={colors.primary} />
                   )}
                 </TouchableOpacity>
               ))}
@@ -67,76 +138,3 @@ export default function FormSelect({ label, value, onValueChange, options, requi
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 4,
-  },
-  label: {
-    fontSize: 14,
-    fontFamily: 'Roboto-Medium',
-    color: '#374151',
-    marginBottom: 8,
-  },
-  required: {
-    color: '#ef4444',
-  },
-  selector: {
-    backgroundColor: '#ffffff',
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  selectorText: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Regular',
-    color: '#1f2937',
-  },
-  placeholder: {
-    color: '#9ca3af',
-  },
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-end',
-  },
-  modal: {
-    backgroundColor: '#ffffff',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    maxHeight: '50%',
-  },
-  modalHeader: {
-    padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontFamily: 'Roboto-Bold',
-    color: '#1f2937',
-    textAlign: 'center',
-  },
-  optionsList: {
-    maxHeight: 300,
-  },
-  option: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6',
-  },
-  optionText: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Regular',
-    color: '#1f2937',
-  },
-});
