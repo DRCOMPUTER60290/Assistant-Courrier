@@ -1,6 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { Share, Download, Trash2, Eye } from 'lucide-react-native';
+import { Share, FileDown, Trash2, Eye } from 'lucide-react-native';
+import * as Print from 'expo-print';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
 import { Letter } from '@/types/letter';
 import { LETTER_TYPES } from '@/constants/letterTypes';
 import ActionButton from '@/components/ActionButton';
@@ -24,8 +27,11 @@ export default function LetterCard({ letter, onDelete }: LetterCardProps) {
 
   const handleDownload = async () => {
     try {
-      // En production, implémenter la génération PDF
-      Alert.alert('Téléchargement', 'Génération PDF à implémenter');
+      const html = `<html><meta charset="utf-8" /><body><pre>${letter.content}</pre></body></html>`;
+      const { uri } = await Print.printToFileAsync({ html });
+      const fileUri = `${FileSystem.documentDirectory}letter-${letter.id}.pdf`;
+      await FileSystem.moveAsync({ from: uri, to: fileUri });
+      await Sharing.shareAsync(fileUri);
     } catch (error) {
       Alert.alert('Erreur', 'Impossible de télécharger le courrier');
     }
@@ -80,7 +86,7 @@ export default function LetterCard({ letter, onDelete }: LetterCardProps) {
         </TouchableOpacity>
         
         <TouchableOpacity style={styles.actionButton} onPress={handleDownload}>
-          <Download size={18} color="#6b7280" />
+          <FileDown size={18} color="#6b7280" />
         </TouchableOpacity>
         
         <TouchableOpacity style={[styles.actionButton, styles.deleteButton]} onPress={onDelete}>
