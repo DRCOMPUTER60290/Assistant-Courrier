@@ -29,4 +29,15 @@ npm install
 
 ## Fonctionnement de la génération de courrier
 
+
 Les données renseignées dans les formulaires sont combinées avec le profil utilisateur pour créer un *prompt* envoyé à l'API située à `https://assistant-backend-yrbx.onrender.com`. La fonction `generateLetter` du fichier [`letterService.ts`](services/letterService.ts) se charge de réaliser l'appel réseau puis renvoie le contenu du courrier.
+
+- Create letters
+- View history
+- Manage settings
+- Preview letters
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
