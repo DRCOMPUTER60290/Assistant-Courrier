@@ -5,19 +5,41 @@ const API_BASE_URL = 'https://assistant-backend-yrbx.onrender.com';
 class LetterService {
   async generateLetter(request: LetterRequest): Promise<string> {
     try {
-      const response = await fetch(`${API_BASE_URL}/generate-letter`, {
+      const { userProfile, recipient, letterType, additionalInfo } = request;
+
+      const promptParts: string[] = [
+        `Utilisateur: ${userProfile.firstName} ${userProfile.lastName}, ${userProfile.address}, ${userProfile.postalCode} ${userProfile.city}, ${userProfile.email}, ${userProfile.phone}`,
+        `Destinataire: ${[
+          recipient.company,
+          recipient.service,
+          recipient.firstName,
+          recipient.lastName,
+        ]
+          .filter(Boolean)
+          .join(' ')}, ${recipient.address}, ${recipient.postalCode} ${recipient.city}${recipient.email ? `, ${recipient.email}` : ''}`,
+        `Type: ${letterType}`,
+        `Infos: ${JSON.stringify(additionalInfo)}`,
+      ];
+
+      const prompt = promptParts.join('\n');
+
+      const response = await fetch(`${API_BASE_URL}/api/generate-letter`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(request),
+        body: JSON.stringify({ prompt }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error('Erreur lors de la génération du courrier');
+        const message = data && typeof data.error === 'string'
+          ? data.error
+          : 'Erreur lors de la génération du courrier';
+        throw new Error(message);
       }
 
-      const data = await response.json();
       return data.content;
     } catch (error) {
       console.error('Erreur API:', error);
