@@ -5,6 +5,7 @@ import LetterTypeSelector from '@/components/LetterTypeSelector';
 import RecipientForm from '@/components/RecipientForm';
 import LetterFieldsForm from '@/components/LetterFieldsForm';
 import ActionButton from '@/components/ActionButton';
+import LoadingOverlay from '@/components/LoadingOverlay';
 import { LetterType, Recipient, UserProfile } from '@/types/letter';
 import { letterService } from '@/services/letterService';
 import { FileText, Send } from 'lucide-react-native';
@@ -138,6 +139,7 @@ export default function CreateScreen() {
           </>
         )}
       </ScrollView>
+      {isGenerating && <LoadingOverlay />}
     </View>
   );
 }
