@@ -130,8 +130,8 @@ export default function CreateScreen() {
                   title="Réinitialiser"
                   icon={Send}
                   onPress={resetForm}
-                  variant="outline"
-                  size="medium"
+                  variant="primary"
+                  size="large"
                 />
               </View>
             </View>
