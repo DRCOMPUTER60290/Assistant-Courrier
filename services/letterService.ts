@@ -8,17 +8,14 @@ class LetterService {
       const { userProfile, recipient, letterType, additionalInfo } = request;
 
       const promptParts: string[] = [
-        `Utilisateur: ${userProfile.firstName} ${userProfile.lastName}, ${userProfile.address}, ${userProfile.postalCode} ${userProfile.city}, ${userProfile.email}, ${userProfile.phone}`,
-        `Destinataire: ${[
+        `Profil utilisateur : ${userProfile.firstName} ${userProfile.lastName}, ${userProfile.address}, ${userProfile.postalCode} ${userProfile.city}, ${userProfile.email}, ${userProfile.phone}`,
+        `Destinataire : ${[
           recipient.company,
           recipient.service,
-          recipient.firstName,
-          recipient.lastName,
-        ]
-          .filter(Boolean)
-          .join(' ')}, ${recipient.address}, ${recipient.postalCode} ${recipient.city}${recipient.email ? `, ${recipient.email}` : ''}`,
-        `Type: ${letterType}`,
-        `Infos: ${JSON.stringify(additionalInfo)}`,
+          recipient.firstName && recipient.lastName ? `${recipient.firstName} ${recipient.lastName}` : null
+        ].filter(Boolean).join(', ')}, ${recipient.address}, ${recipient.postalCode} ${recipient.city}${recipient.email ? `, ${recipient.email}` : ''}`,
+        `Type de courrier : ${letterType}`,
+        `Informations supplémentaires : ${JSON.stringify(additionalInfo)}`,
       ];
 
       const prompt = promptParts.join('\n');
@@ -48,8 +45,6 @@ class LetterService {
   }
 
   async saveUserProfile(profile: UserProfile): Promise<void> {
-    // Simulation d'une sauvegarde locale
-    // En production, utiliser AsyncStorage ou une base de données
     try {
       const profileData = JSON.stringify(profile);
       // await AsyncStorage.setItem('userProfile', profileData);
@@ -64,8 +59,7 @@ class LetterService {
     try {
       // const profileData = await AsyncStorage.getItem('userProfile');
       // return profileData ? JSON.parse(profileData) : null;
-      
-      // Simulation d'un profil pour la démo
+
       return {
         firstName: 'Jean',
         lastName: 'Dupont',
@@ -96,8 +90,7 @@ class LetterService {
     try {
       // const lettersData = await AsyncStorage.getItem('letters');
       // return lettersData ? JSON.parse(lettersData) : [];
-      
-      // Simulation d'historique pour la démo
+
       return [
         {
           id: '1',
@@ -131,6 +124,22 @@ class LetterService {
           updatedAt: new Date('2024-01-10'),
           status: 'completed',
         },
+        {
+          id: '3',
+          type: 'conge',
+          title: 'Demande de congé annuel',
+          content: 'Objet : Demande de congé du 01/08 au 15/08...',
+          recipient: {
+            company: 'ACME Corp',
+            service: 'Ressources Humaines',
+            address: '50 Rue Exemple',
+            postalCode: '69000',
+            city: 'Lyon',
+          },
+          createdAt: new Date('2024-01-05'),
+          updatedAt: new Date('2024-01-05'),
+          status: 'completed',
+        },
       ];
     } catch (error) {
       console.error('Erreur chargement courriers:', error);
@@ -141,14 +150,13 @@ class LetterService {
   async getStatistics(): Promise<Statistics> {
     try {
       const letters = await this.getLetters();
-      
+
       const totalLetters = letters.length;
       const lettersByType = letters.reduce((acc, letter) => {
         acc[letter.type] = (acc[letter.type] || 0) + 1;
         return acc;
       }, {} as Record<string, number>);
 
-      // Simulation d'activité récente
       const recentActivity = [
         { day: 'Lun', count: 2 },
         { day: 'Mar', count: 1 },

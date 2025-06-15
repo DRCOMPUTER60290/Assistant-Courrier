@@ -289,6 +289,48 @@ export const LETTER_TYPES: LetterTypeInfo[] = [
     ],
   },
   {
+    type: 'conge',
+    title: 'Demande de congé',
+    description: 'Demander un congé ou une absence prolongée',
+    icon: 'Plane',
+    color: '#0d9488',
+    fields: [
+      {
+        key: 'leaveType',
+        label: 'Type de congé',
+        type: 'select',
+        required: true,
+        options: ['Congé payé', 'Congé sans solde', 'Maladie', 'Maternité/Paternité', 'Autre'],
+      },
+      {
+        key: 'startDate',
+        label: 'Date de début',
+        type: 'date',
+        required: true,
+      },
+      {
+        key: 'endDate',
+        label: 'Date de fin',
+        type: 'date',
+        required: true,
+      },
+      {
+        key: 'reason',
+        label: 'Motif',
+        type: 'textarea',
+        required: false,
+        placeholder: 'Indiquez le motif du congé...'
+      },
+      {
+        key: 'contactDuringLeave',
+        label: 'Contact pendant le congé',
+        type: 'text',
+        required: false,
+        placeholder: 'Email ou téléphone en cas d\'urgence',
+      },
+    ],
+  },
+  {
     type: 'administrative',
     title: 'Démarche administrative',
     description: 'Courrier pour administrations et services publics',
