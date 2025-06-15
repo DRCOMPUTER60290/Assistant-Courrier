@@ -56,7 +56,11 @@ export default function LetterPreviewScreen() {
 
   return (
     <View style={styles.container}>
-      <Header title="Prévisualisation" subtitle="Aperçu du courrier généré" />
+      <Header
+        title="Prévisualisation"
+        subtitle="Aperçu du courrier généré"
+        showBack
+      />
 
       {!content ? (
         <EmptyState
