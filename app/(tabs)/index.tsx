@@ -135,8 +135,8 @@ export default function HomeScreen() {
             title="Voir l'historique"
             icon={Calendar}
             onPress={navigateToHistory}
-            variant="outline"
-            size="medium"
+            variant="secondary"
+            size="large"
           />
         </View>
       </ScrollView>
