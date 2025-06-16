@@ -37,7 +37,8 @@ can copy `.env.example` and adjust the value:
 cp .env.example .env
 ```
 
-If the variable is not provided, the app defaults to
+`utils/apiConfig.ts` reads this value at runtime. If the variable is not
+provided, the helper falls back to `app.json` `extra.API_BASE_URL` and finally to
 `https://assistant-backend-yrbx.onrender.com`.
 
 ## Features
@@ -45,7 +46,7 @@ If the variable is not provided, the app defaults to
 ## Fonctionnement de la génération de courrier
 
 
-Les données renseignées dans les formulaires sont combinées avec le profil utilisateur pour créer un *prompt* envoyé à l'API située à `https://assistant-backend-yrbx.onrender.com`. La fonction `generateLetter` du fichier [`letterService.ts`](services/letterService.ts) se charge de réaliser l'appel réseau puis renvoie le contenu du courrier.
+Les données renseignées dans les formulaires sont combinées avec le profil utilisateur pour créer un *prompt* envoyé à l'API configurée dans `utils/apiConfig.ts`. La fonction `generateLetter` du fichier [`letterService.ts`](services/letterService.ts) se charge de réaliser l'appel réseau puis renvoie le contenu du courrier.
 
 
 - Create letters

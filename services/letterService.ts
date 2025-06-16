@@ -1,7 +1,5 @@
 import { Letter, LetterRequest, UserProfile, Statistics } from '@/types/letter';
-
-const API_BASE_URL =
-  process.env.API_BASE_URL ?? 'https://assistant-backend-yrbx.onrender.com';
+import { API_BASE_URL } from '@/utils/apiConfig';
 
 class LetterService {
   async generateLetter(request: LetterRequest): Promise<string> {
