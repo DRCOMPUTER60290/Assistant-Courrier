@@ -1,4 +1,5 @@
 import { Letter, LetterRequest, UserProfile, Statistics } from '@/types/letter';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const API_BASE_URL =
   process.env.API_BASE_URL ?? 'https://assistant-backend-yrbx.onrender.com';
@@ -48,8 +49,7 @@ class LetterService {
   async saveUserProfile(profile: UserProfile): Promise<void> {
     try {
       const profileData = JSON.stringify(profile);
-      // await AsyncStorage.setItem('userProfile', profileData);
-      console.log('Profil sauvegardé:', profileData);
+      await AsyncStorage.setItem('userProfile', profileData);
     } catch (error) {
       console.error('Erreur sauvegarde profil:', error);
       throw new Error('Impossible de sauvegarder le profil');
@@ -58,18 +58,8 @@ class LetterService {
 
   async getUserProfile(): Promise<UserProfile | null> {
     try {
-      // const profileData = await AsyncStorage.getItem('userProfile');
-      // return profileData ? JSON.parse(profileData) : null;
-
-      return {
-        firstName: 'Jean',
-        lastName: 'Dupont',
-        email: 'jean.dupont@email.com',
-        phone: '06 12 34 56 78',
-        address: '123 Rue de la République',
-        postalCode: '75001',
-        city: 'Paris',
-      };
+      const profileData = await AsyncStorage.getItem('userProfile');
+      return profileData ? (JSON.parse(profileData) as UserProfile) : null;
     } catch (error) {
       console.error('Erreur chargement profil:', error);
       return null;
@@ -79,8 +69,7 @@ class LetterService {
   async saveLetters(letters: Letter[]): Promise<void> {
     try {
       const lettersData = JSON.stringify(letters);
-      // await AsyncStorage.setItem('letters', lettersData);
-      console.log('Courriers sauvegardés:', lettersData);
+      await AsyncStorage.setItem('letters', lettersData);
     } catch (error) {
       console.error('Erreur sauvegarde courriers:', error);
       throw new Error('Impossible de sauvegarder les courriers');
@@ -89,59 +78,23 @@ class LetterService {
 
   async getLetters(): Promise<Letter[]> {
     try {
-      // const lettersData = await AsyncStorage.getItem('letters');
-      // return lettersData ? JSON.parse(lettersData) : [];
+      const lettersData = await AsyncStorage.getItem('letters');
+      if (!lettersData) {
+        return [];
+      }
 
-      return [
-        {
-          id: '1',
-          type: 'resiliation',
-          title: 'Résiliation contrat internet',
-          content: 'Objet : Résiliation de contrat internet...',
-          recipient: {
-            company: 'Orange',
-            service: 'Service Client',
-            address: '1 Avenue du Service',
-            postalCode: '75000',
-            city: 'Paris',
-          },
-          createdAt: new Date('2024-01-15'),
-          updatedAt: new Date('2024-01-15'),
-          status: 'completed',
-        },
-        {
-          id: '2',
-          type: 'reclamation',
-          title: 'Réclamation facture incorrecte',
-          content: 'Objet : Contestation facture n°12345...',
-          recipient: {
-            company: 'EDF',
-            service: 'Service Réclamations',
-            address: '22 Avenue de Wagram',
-            postalCode: '75008',
-            city: 'Paris',
-          },
-          createdAt: new Date('2024-01-10'),
-          updatedAt: new Date('2024-01-10'),
-          status: 'completed',
-        },
-        {
-          id: '3',
-          type: 'conge',
-          title: 'Demande de congé annuel',
-          content: 'Objet : Demande de congé du 01/08 au 15/08...',
-          recipient: {
-            company: 'ACME Corp',
-            service: 'Ressources Humaines',
-            address: '50 Rue Exemple',
-            postalCode: '69000',
-            city: 'Lyon',
-          },
-          createdAt: new Date('2024-01-05'),
-          updatedAt: new Date('2024-01-05'),
-          status: 'completed',
-        },
-      ];
+      const parsed = JSON.parse(lettersData) as Array<
+        Omit<Letter, 'createdAt' | 'updatedAt'> & {
+          createdAt: string;
+          updatedAt: string;
+        }
+      >;
+
+      return parsed.map((letter) => ({
+        ...letter,
+        createdAt: new Date(letter.createdAt),
+        updatedAt: new Date(letter.updatedAt),
+      }));
     } catch (error) {
       console.error('Erreur chargement courriers:', error);
       return [];
