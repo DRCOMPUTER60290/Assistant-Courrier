@@ -4,7 +4,6 @@ import { FileText, TrendingUp, Calendar, Users, User } from 'lucide-react-native
 import Header from '@/components/Header';
 import StatsCard from '@/components/StatsCard';
 import ActionButton from '@/components/ActionButton';
-import AdBanner from '@/components/AdBanner';
 import { useTheme } from '@/contexts/ThemeContext';
 import { letterService } from '@/services/letterService';
 import { Statistics, UserProfile } from '@/types/letter';
@@ -205,7 +204,6 @@ export default function HomeScreen() {
           />
         </View>
       </ScrollView>
-      <AdBanner />
     </View>
   );
 }

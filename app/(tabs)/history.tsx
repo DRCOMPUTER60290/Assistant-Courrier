@@ -7,7 +7,6 @@ import { Letter } from '@/types/letter';
 import { letterService } from '@/services/letterService';
 import { FileText } from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
-import AdBanner from '@/components/AdBanner';
 
 export default function HistoryScreen() {
   const [letters, setLetters] = useState<Letter[]>([]);
@@ -112,7 +111,6 @@ export default function HistoryScreen() {
           </View>
         )}
       </ScrollView>
-      <AdBanner />
     </View>
   );
 }

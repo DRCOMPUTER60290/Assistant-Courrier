@@ -6,7 +6,6 @@ import RecipientForm from '@/components/RecipientForm';
 import LetterFieldsForm from '@/components/LetterFieldsForm';
 import ActionButton from '@/components/ActionButton';
 import LoadingOverlay from '@/components/LoadingOverlay';
-import AdBanner from '@/components/AdBanner';
 import { LetterType, Recipient, UserProfile } from '@/types/letter';
 import { letterService } from '@/services/letterService';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -157,7 +156,6 @@ export default function CreateScreen() {
         )}
       </ScrollView>
       {isGenerating && <LoadingOverlay />}
-      <AdBanner />
     </View>
   );
 }

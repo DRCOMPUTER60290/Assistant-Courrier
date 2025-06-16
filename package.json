@@ -31,7 +31,6 @@
     "expo-print": "~14.1.4",
     "expo-file-system": "~18.1.10",
     "expo-sharing": "~13.1.5",
-    "expo-ads-admob": "~13.1.0",
     "@expo-google-fonts/roboto": "^0.2.3",
     "lucide-react-native": "^0.475.0",
     "react": "19.0.0",
