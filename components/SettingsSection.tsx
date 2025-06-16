@@ -15,8 +15,10 @@ import {
   Info,
   RotateCcw,
   Moon,
+  CreditCard,
 } from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useAds } from '@/contexts/AdsContext';
 
 interface SettingsSectionProps {
   onResetProfile: () => void;
@@ -24,6 +26,7 @@ interface SettingsSectionProps {
 
 export default function SettingsSection({ onResetProfile }: SettingsSectionProps) {
   const { theme, toggleTheme, colors } = useTheme();
+  const { adsRemoved, removeAds } = useAds();
 
   const isDarkMode = theme === 'dark';
 
@@ -38,12 +41,40 @@ export default function SettingsSection({ onResetProfile }: SettingsSectionProps
     );
   };
 
+  const handleRemoveAds = () => {
+    if (adsRemoved) {
+      Alert.alert('Achat déjà effectué');
+      return;
+    }
+
+    Alert.alert(
+      'Supprimer la publicité',
+      'Cette action simule un paiement pour retirer les publicités.',
+      [
+        { text: 'Annuler', style: 'cancel' },
+        {
+          text: 'Payer',
+          onPress: async () => {
+            await removeAds();
+            Alert.alert('Merci', 'Les publicités ont été désactivées');
+          },
+        },
+      ]
+    );
+  };
+
   const settingsItems = [
     {
       icon: Shield,
       title: 'Politique de confidentialité',
       description: 'Comment nous protégeons vos données',
       onPress: () => openLink('https://example.com/privacy', 'Politique de confidentialité'),
+    },
+    {
+      icon: CreditCard,
+      title: 'Supprimer la publicité',
+      description: adsRemoved ? 'Achat effectué' : 'Paiement unique pour retirer les pubs',
+      onPress: handleRemoveAds,
     },
     {
       icon: FileText,
