@@ -1,8 +1,6 @@
 import { Letter, LetterRequest, UserProfile, Statistics } from '@/types/letter';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const API_BASE_URL =
-  process.env.API_BASE_URL ?? 'https://assistant-backend-yrbx.onrender.com';
+import { API_BASE_URL } from '@/utils/apiConfig';
 
 class LetterService {
   async generateLetter(request: LetterRequest): Promise<string> {
@@ -79,9 +77,7 @@ class LetterService {
   async getLetters(): Promise<Letter[]> {
     try {
       const lettersData = await AsyncStorage.getItem('letters');
-      if (!lettersData) {
-        return [];
-      }
+      if (!lettersData) return [];
 
       const parsed = JSON.parse(lettersData) as Array<
         Omit<Letter, 'createdAt' | 'updatedAt'> & {
@@ -123,7 +119,7 @@ class LetterService {
 
       return {
         totalLetters,
-        lettersByType: lettersByType as any,
+        lettersByType,
         recentActivity,
         monthlyGrowth: 15,
       };
@@ -134,14 +130,14 @@ class LetterService {
         lettersByType: {},
         recentActivity: [],
         monthlyGrowth: 0,
-      } as any;
+      };
     }
   }
 
   async deleteLetter(letterId: string): Promise<void> {
     try {
       const letters = await this.getLetters();
-      const updatedLetters = letters.filter(letter => letter.id !== letterId);
+      const updatedLetters = letters.filter((letter) => letter.id !== letterId);
       await this.saveLetters(updatedLetters);
     } catch (error) {
       console.error('Erreur suppression courrier:', error);

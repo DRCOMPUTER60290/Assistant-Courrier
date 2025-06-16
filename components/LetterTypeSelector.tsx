@@ -24,12 +24,12 @@ export default function LetterTypeSelector({ selectedType, onSelectType }: Lette
           marginBottom: 16,
         },
         scrollContainer: { marginHorizontal: -4 },
-        typeGrid: { flexDirection: 'row', paddingHorizontal: 4, gap: 12 },
+        typeGrid: { flexDirection: 'column', paddingHorizontal: 4, gap: 12 },
         typeCard: {
           backgroundColor: colors.card,
           borderRadius: 16,
           padding: 16,
-          width: 180,
+          width: '100%',
           borderLeftWidth: 4,
           shadowColor: colors.shadow,
           shadowOffset: { width: 0, height: 2 },
@@ -73,7 +73,7 @@ export default function LetterTypeSelector({ selectedType, onSelectType }: Lette
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Type de courrier</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.scrollContainer}>
+      <ScrollView showsHorizontalScrollIndicator={false} style={styles.scrollContainer}>
         <View style={styles.typeGrid}>
           {LETTER_TYPES.map((letterType) => {
             const isSelected = selectedType === letterType.type;
