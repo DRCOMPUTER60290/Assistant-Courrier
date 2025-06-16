@@ -16,6 +16,7 @@ npm install
 ## Commandes utiles
 
 - `npm run dev` : démarre le serveur de développement Expo.
+- `npm run dev:clear` : démarre Expo en vidant le cache (utile si l'icône ne se met pas à jour).
 - `npm run build:web` : génère la version web statique.
 - `npm run lint` : lance le linter.
 
