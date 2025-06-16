@@ -66,7 +66,7 @@ export default function EmptyState({
           <ActionButton
             title={actionTitle}
             onPress={onAction}
-            variant="outline"
+            variant="primary"
             size="medium"
           />
         </View>
