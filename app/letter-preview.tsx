@@ -12,6 +12,7 @@ import {
 import { useLocalSearchParams, router } from 'expo-router';
 import Header from '@/components/Header';
 import EmptyState from '@/components/EmptyState';
+import AdBanner from '@/components/AdBanner';
 import {
   FileText,
   ArrowLeft,
@@ -133,6 +134,7 @@ export default function LetterPreviewScreen() {
           <Mail size={18} color={colors.textSecondary} />
         </TouchableOpacity>
       </View>
+      <AdBanner />
     </View>
   );
 }
