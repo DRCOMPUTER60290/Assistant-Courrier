@@ -5,7 +5,6 @@ import { StatusBar } from 'expo-status-bar';
 import { SplashScreen } from 'expo-router';
 import { useFrameworkReady } from '@/hooks/useFrameworkReady';
 import { ThemeProvider, useTheme } from '@/contexts/ThemeContext';
-import { AdsProvider } from '@/contexts/AdsContext';
 
 // Empêche l'écran de chargement de se fermer automatiquement
 SplashScreen.preventAutoHideAsync();
@@ -31,9 +30,7 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider>
-      <AdsProvider>
-        <RootContent />
-      </AdsProvider>
+      <RootContent />
     </ThemeProvider>
   );
 }
