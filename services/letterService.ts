@@ -2,6 +2,16 @@ import { Letter, LetterRequest, UserProfile, Statistics } from '@/types/letter';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_BASE_URL } from '@/utils/apiConfig';
 
+const DEFAULT_PROFILE: UserProfile = {
+  firstName: 'Jean',
+  lastName: 'Dupont',
+  email: 'jean.dupont@email.com',
+  phone: '06 12 34 56 78',
+  address: '123 Rue de la République',
+  postalCode: '75001',
+  city: 'Paris',
+};
+
 class LetterService {
   async generateLetter(request: LetterRequest): Promise<string> {
     try {
@@ -57,7 +67,10 @@ class LetterService {
   async getUserProfile(): Promise<UserProfile | null> {
     try {
       const profileData = await AsyncStorage.getItem('userProfile');
-      return profileData ? (JSON.parse(profileData) as UserProfile) : null;
+      if (profileData) {
+        return JSON.parse(profileData) as UserProfile;
+      }
+      return DEFAULT_PROFILE;
     } catch (error) {
       console.error('Erreur chargement profil:', error);
       return null;

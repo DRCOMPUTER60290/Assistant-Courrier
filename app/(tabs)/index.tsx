@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { View, ScrollView, StyleSheet, RefreshControl, Text, Image } from 'react-native';
 import { FileText, TrendingUp, Calendar, Users, User } from 'lucide-react-native';
 import Header from '@/components/Header';
@@ -7,7 +7,7 @@ import ActionButton from '@/components/ActionButton';
 import { useTheme } from '@/contexts/ThemeContext';
 import { letterService } from '@/services/letterService';
 import { Statistics, UserProfile } from '@/types/letter';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 
 export default function HomeScreen() {
   const [stats, setStats] = useState<Statistics | null>(null);
@@ -93,6 +93,12 @@ export default function HomeScreen() {
   useEffect(() => {
     loadData();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+    }, [])
+  );
 
   const navigateToCreate = () => {
     router.push('/create');
